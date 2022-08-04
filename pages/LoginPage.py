@@ -24,6 +24,11 @@ class LoginPage(BasePage):
         assert login_button, "No Password field on Login page"
         return login_button
 
+    def should_be_signup_button(self):
+        signup_button = LoginPageLocators.signup_button(self.app)
+        assert signup_button, "No SignUp button on Login page"
+        return signup_button
+
     def print_username_in_login_username_field(self):
         username_field = self.should_be_login_username_field()
         username_field.click_input()

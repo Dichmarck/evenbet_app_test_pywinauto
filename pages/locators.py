@@ -59,3 +59,11 @@ class LoginPageLocators(BasePageLocators):
     def login_button(app, timeout=0):
         return find_element_or_none(app.Login.Dialog.TabItem.Button1, timeout=timeout)
 
+    @staticmethod
+    def signup_button(app, timeout=0):
+        return find_element_or_none(app.Login.Dialog.TabItem.Button2, timeout=timeout)
+
+
+#class SignUpPageLocators(LoginPageLocators):
+#    @staticmethod
+#    def

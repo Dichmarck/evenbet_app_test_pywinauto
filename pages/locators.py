@@ -22,6 +22,10 @@ class BasePageLocators:
         return find_element_or_none(app.TitleBar.Button3, timeout=timeout)
 
     @staticmethod
+    def fullscreen_button(app, timeout=0):
+        return find_element_or_none(app.TitleBar.Button2, timeout=timeout)
+
+    @staticmethod
     def yes_button(app, timeout=0):
         return find_element_or_none(app.Yes, timeout=timeout)
 

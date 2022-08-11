@@ -7,6 +7,7 @@ from evenbet_app_test_pywinauto.pages.BasePage import BasePage
 from evenbet_app_test_pywinauto.pages.LoginPage import LoginPage
 from evenbet_app_test_pywinauto.pages.locators import *
 
+#pytest -s -v --tb=short --alluredir=allure
 
 @pytest.fixture(scope='class')
 def app():
@@ -15,10 +16,14 @@ def app():
         app_win = application.window(title_re=APP_TITLE_RE)
         page = LoginPage(app_win)
 
-    with allure.step("Find and clsoe login form."):
+    with allure.step("Find and close login form."):
         page.should_appear_login_window(timeout=2)
         close_login_window_button = page.should_be_close_login_window_button()
         close_login_window_button.click_input()
+
+    with allure.step("Make window fullscreen."):
+        fullscreen_btn = page.should_be_fullscreen_button()
+        fullscreen_btn.click_input()
 
     yield app_win
 
@@ -27,4 +32,5 @@ def app():
         close_btn.click_input()
         yes_button = page.should_appear_yes_button(timeout=2)
         yes_button.click_input()
+        application.kill()
 

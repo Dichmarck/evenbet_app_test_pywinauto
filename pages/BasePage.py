@@ -13,6 +13,11 @@ class BasePage:
         assert close_app_right_top_cross, "Right top close-app-cross is not detected."
         return close_app_right_top_cross
 
+    def should_be_fullscreen_button(self):
+        fullscreen_button = BasePageLocators.fullscreen_button(self.app)
+        assert fullscreen_button, "Right top fullscreen button is not detected."
+        return fullscreen_button
+
     def should_appear_yes_button(self, timeout=0):
         yes_button = BasePageLocators.yes_button(self.app, timeout=timeout)
         assert yes_button, "Yes-button is not detected."

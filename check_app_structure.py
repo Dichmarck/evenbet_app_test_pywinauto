@@ -1,7 +1,16 @@
 import time
+
+import _ctypes
 import pyautogui
 import pywinauto
 from evenbet_app_test_pywinauto.constants import *
+from pywinauto import Desktop
+from evenbet_app_test_pywinauto.pages.BasePage import BasePage
+import re
+
+from evenbet_app_test_pywinauto.pages.PokerTablePage import PokerTablePage
+from evenbet_app_test_pywinauto.pages.locators import WindowsLocators, find_element_or_none
+
 
 def get_rect_center(rect):
     h_center = int((rect.left + rect.right)/2)
@@ -20,46 +29,26 @@ def is_inside_window(elem_rect, win_rect):
     return True
 
 
-
-application = pywinauto.Application(backend='uia').start(APP_PATH).connect(title_re=APP_TITLE_RE, timeout=30)
-app_win = application.window(title_re=APP_TITLE_RE)
-
-
-tables_tabitem = app_win.child_window(class_name="PokerLobbyCashTablesView_QMLTYPE_505")
-tables_tabitem_rect = tables_tabitem.rectangle()
-#tables_tabitem.print_ctrl_ids()
-buttons = tables_tabitem.descendants(control_type="Button")
-#pyautogui.moveTo(*get_center(scrollbar_v.rectangle()))
+def dnd_scroll(dist):
+    pyautogui.mouseDown(button='left')
+    pyautogui.move(0, dist)
+    pyautogui.mouseUp(button='left')
 
 
-clicked_buttons = []
-while True:
-    loaded_buttons = tables_tabitem.descendants(control_type="Button")
-    new_visible_tables_buttons = []
-    for button in loaded_buttons:
-        if button not in clicked_buttons and "PButtonPrimary_QMLTYPE_" in button.class_name():
-            button_rect = button.rectangle()
-            if not is_inside_window(button_rect, tables_tabitem_rect):
-                continue
-            new_visible_tables_buttons.append(button)
-
-    print(new_visible_tables_buttons)
-    for button in new_visible_tables_buttons:
-        pyautogui.moveTo(*get_rect_center(button.rectangle()))
-        clicked_buttons.append(button)
+def ensure_element_disappears(element, timeout=0):
+    time_start = time.time()
+    while time.time() - time_start <= timeout:
+        try:
+            print(element.rectangle())
+        except _ctypes.COMError as e:
+            print(repr(e))
+            return True
+    print(time.time() - time_start)
+    return False
 
 
+application = pywinauto.Application(backend='uia').start(APP_PATH).connect(class_name_re=MAIN_WINDOW_CLASS_NAME_RE)
 
-    tables_tabitem.wheel_mouse_input(wheel_dist=-1)
-
-
-
-
-
-
-#ables_buttons = []
-#or i in range(3000):
-#
-
+app_win = application.window(class_name_re=MAIN_WINDOW_CLASS_NAME_RE)
 
 

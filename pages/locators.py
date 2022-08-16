@@ -114,11 +114,45 @@ class BasePageLocators:
 
     @staticmethod
     def chat_dialog(app, timeout=0):
-        return find_element_or_none(app.child_window(class_name_re="LobbyChat_QMLTYPE_*"))
+        return find_element_or_none(app.child_window(class_name_re="LobbyChat_QMLTYPE_*"), timeout=timeout)
 
     @staticmethod
     def my_tables_dialog(app, timeout=0):
-        return find_element_or_none(app.child_window(class_name_re="Stub_QMLTYPE_*"))
+        return find_element_or_none(app.child_window(class_name_re="Stub_QMLTYPE_*"), timeout=timeout)
+
+    @staticmethod
+    def right_top_settings_button(app, timeout=0):
+        return find_element_or_none(app.child_window(class_name_re="PComboBox_QMLTYPE_*"), timeout=timeout)
+
+    @staticmethod
+    def right_top_settings_tabs(app, timeout=0):
+        popup_settings_menu = find_element_or_none(app.child_window(class_name="QQuickPopupItem"), timeout=timeout)
+        try:
+            settings_tabs = popup_settings_menu.children(control_type="MenuItem")
+            return settings_tabs if len(settings_tabs) != 0 else None
+        except Exception:
+            return None
+
+    @staticmethod
+    def sounds_settings_form(app, timeout=0):
+        return find_element_or_none(app.child_window(class_name_re="SoundsForm_QMLTYPE_*"), timeout=timeout)
+
+    @staticmethod
+    def rates_slider_settings_form(app, timeout=0):
+        return find_element_or_none(app.child_window(class_name_re="RatesSliderFormTemplate_*"), timeout=timeout)
+
+    @staticmethod
+    def system_chat_settings_form(app, timeout=0):
+        return find_element_or_none(app.child_window(class_name_re="SystemChatForm_QMLTYPE_*"), timeout=timeout)
+
+    @staticmethod
+    def buyin_rebuy_settings_form(app, timeout=0):
+        return find_element_or_none(app.child_window(class_name_re="BuyInRebuyForm_QMLTYPE_*"), timeout=timeout)
+
+    @staticmethod
+    def table_settings_form(app, timeout=0):
+        return find_element_or_none(app.child_window(class_name_re="TableSettingsForm_QMLTYPE_*"), timeout=timeout)
+
 
 
 

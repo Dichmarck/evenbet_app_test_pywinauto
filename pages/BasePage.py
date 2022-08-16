@@ -111,4 +111,47 @@ class BasePage:
         print("My Tournaments window: ", time.time() - time_start)
         return my_tournaments_window
 
+    def find_right_top_settings_button(self):
+        time_start = time.time()
+        right_top_settings_button = BasePageLocators.right_top_settings_button(self.app)
+        print("Right top settings button: ", time.time() - time_start)
+        return right_top_settings_button
+
+    def wait_for_right_top_settings_tabs(self, timeout=0):
+        time_start = time.time()
+        right_top_settings_tabs = BasePageLocators.right_top_settings_tabs(self.app)
+        print("Right top settings tabs: ", time.time() - time_start)
+        return right_top_settings_tabs
+
+    def wait_for_sounds_settings_form(self, timeout=0):
+        time_start = time.time()
+        sounds_settings_form = BasePageLocators.sounds_settings_form(self.app, timeout=timeout)
+        print("Sounds settings form: ", time.time() - time_start)
+        return sounds_settings_form
+
+    def wait_for_rates_slider_settings_form(self, timeout=0):
+        time_start = time.time()
+        rates_slider_settings_form = BasePageLocators.rates_slider_settings_form(self.app, timeout=timeout)
+        print("Rates slider settings form: ", time.time() - time_start)
+        return rates_slider_settings_form
+
+    def wait_for_system_chat_settings_form(self, timeout=0):
+        time_start = time.time()
+        system_chat_settings_form = BasePageLocators.system_chat_settings_form(self.app, timeout=timeout)
+        print("System & Chat settings form: ", time.time() - time_start)
+        return system_chat_settings_form
+
+    def wait_for_buyin_rebuy_settings_form(self, timeout=0):
+        time_start = time.time()
+        buyin_rebuy_settings_form = BasePageLocators.buyin_rebuy_settings_form(self.app, timeout=timeout)
+        print("BuyIn & Rebuy settings form: ", time.time() - time_start)
+        return buyin_rebuy_settings_form
+
+    def wait_for_table_settings_form(self, timeout=0):
+        time_start = time.time()
+        table_settings_form = BasePageLocators.table_settings_form(self.app, timeout=timeout)
+        print("Table settings form: ", time.time() - time_start)
+        return table_settings_form
+
+
 

@@ -1,5 +1,9 @@
+import datetime
+import os
+import sys
 import time
 import allure
+import pyautogui
 import pytest
 import pywinauto
 from evenbet_app_test_pywinauto.constants import *
@@ -20,7 +24,7 @@ def app():
         page = LoginPage(app_win)
 
     with allure.step("Find or open login window."):
-        login_window = page.wait_for_login_window(timeout=5)
+        login_window = page.wait_for_login_window(timeout=3)
         if not login_window:
             main_page_login_button = page.find_main_page_login_button()
             assert main_page_login_button, "No Login button on main page."
@@ -58,8 +62,39 @@ def app():
 
 @pytest.fixture(scope='module')
 def test_app():
+    print("test_app fixture start")
     application = pywinauto.Application(backend='uia').start(APP_PATH). \
         connect(class_name_re=MAIN_WINDOW_CLASS_NAME_RE, timeout=30)
     app_win = application.window(class_name_re=MAIN_WINDOW_CLASS_NAME_RE)
 
     yield app_win
+
+    print("test_app fixture end")
+
+
+#def make_screenshot():
+
+
+@pytest.fixture(scope="function")
+def screenshot_report():
+    print("Screenshot fixture start: ")
+    feedback = {"window": None, "file_name": "", "status": "Failed"}
+    yield feedback
+    print(feedback)
+    print("Screenshot fixture end: ")
+    print(feedback['window'])
+    if feedback['window'] and feedback['status'] == 'Failed':
+        window_rect = feedback['window'].rectangle()
+        left = window_rect.left
+        top = window_rect.top
+        width = window_rect.right - window_rect.left
+        height = window_rect.bottom - window_rect.top
+        date = datetime.date.today()
+        if not os.path.exists(f"reports/screenshots/{date}/"):
+            os.makedirs(f"reports/screenshots/{date}/")
+        name = feedback['file_name']
+        pyautogui.screenshot(region=(left, top, width, height)).save(f"reports/screenshots/{date}/{name}.png")
+
+
+def return_func_name():
+    return sys._getframe(1).f_code.co_name

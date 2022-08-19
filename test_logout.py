@@ -1,5 +1,4 @@
 import allure
-import pytest
 from evenbet_app_test_pywinauto.conftest import return_func_name, mouse_input
 from evenbet_app_test_pywinauto.pages.BasePage import BasePage
 
@@ -29,4 +28,3 @@ def test_logout_from_left_menu(app, screenshot_report):
                                        "button on logout dialog."
         mouse_input(main_page_login_button)
     screenshot_report['status'] = 'passed'
-

@@ -2,28 +2,25 @@ import datetime
 import io
 import os
 import sys
-import time
-
 import PIL.Image
 import allure
 import pyautogui
 import pytest
-import pywinauto
-from allure_commons.types import AttachmentType
 
 from evenbet_app_test_pywinauto.constants import *
 from evenbet_app_test_pywinauto.pages.BasePage import BasePage
 from evenbet_app_test_pywinauto.pages.LoginPage import LoginPage
 from evenbet_app_test_pywinauto.pages.locators import *
 
-#pytest -s -v --tb=short --alluredir=allure
+
+# pytest -s -v --tb=short --alluredir=allure
 
 @pytest.fixture(scope='module')
 def app():
     """This fixture opens application, authorizing in it, makes window full-screen and closes app in the end."""
 
     with allure.step("Start app and connect to it."):
-        application = pywinauto.Application(backend='uia').start(APP_PATH).\
+        application = pywinauto.Application(backend='uia').start(APP_PATH). \
             connect(class_name_re=MAIN_WINDOW_CLASS_NAME_RE, timeout=30)
         app_win = application.window(class_name_re=MAIN_WINDOW_CLASS_NAME_RE)
         page = LoginPage(app_win)
@@ -73,9 +70,9 @@ def test_app():
     yield app_win
 
 
+# def make_screenshot():
 
-#def make_screenshot():
-import pickle
+
 
 @pytest.fixture(scope="function")
 def screenshot_report():
@@ -110,10 +107,9 @@ def mouse_input(element, duration=0):
     center_v = int((rect.bottom + rect.top) / 2)
     pyautogui.moveTo(center_h, center_v, duration)
 
+
 def find_elem_by_text(elements, text):
     for elem in elements:
         if elem.window_text().strip().lower() == text.strip().lower():
             return elem
     return None
-
-

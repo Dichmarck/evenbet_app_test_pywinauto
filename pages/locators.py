@@ -1,21 +1,15 @@
 import re
-
 import pywinauto
 import time
-import pytest
 
 
 def find_element_or_none(element, timeout=0):
-    time_now = time.time()
     time_start = time.time()
-    while time_now - time_start <= timeout:
+    while time.time() - time_start <= timeout:
         try:
-            #element.rectangle()
-            #return element
             return element.wrapper_object()
         except pywinauto.findwindows.ElementNotFoundError:
             pass
-        time_now = time.time()
     return None
 
 
@@ -26,16 +20,17 @@ class WindowsLocators:
         try:
             cashier_app = pywinauto.Application(backend='uia').connect(class_name_re="CashierDesktopWindow_QMLTYPE_*",
                                                                        timeout=timeout)
-            return find_element_or_none(cashier_app.window(class_name_re="CashierDesktopWindow_QMLTYPE_*"), timeout=timeout)
+            return find_element_or_none(cashier_app.window(class_name_re="CashierDesktopWindow_QMLTYPE_*"),
+                                        timeout=timeout)
         except Exception:
             return None
 
     @staticmethod
     def poker_table_window(timeout=0):
         try:
-            poker_table_window = pywinauto.Application(backend='uia').\
-                                           connect(class_name_re="TableDesktopWindow_QMLTYPE_*", timeout=timeout).\
-                                           window(class_name_re="TableDesktopWindow_QMLTYPE_*")
+            poker_table_window = pywinauto.Application(backend='uia'). \
+                connect(class_name_re="TableDesktopWindow_QMLTYPE_*", timeout=timeout). \
+                window(class_name_re="TableDesktopWindow_QMLTYPE_*")
             return poker_table_window
         except Exception:
             return None
@@ -44,7 +39,7 @@ class WindowsLocators:
     def my_tournaments_window(timeout=0):
         try:
             my_tours_app = pywinauto.Application(backend='uia').connect(class_name_re="DesktopDialog_QMLTYPE_*",
-                                                                    timeout=timeout)
+                                                                        timeout=timeout)
             return find_element_or_none(my_tours_app.window(class_name_re="DesktopDialog_QMLTYPE_*").
                                         child_window(class_name_re="MyTournamentsForm_QMLTYPE_*"), timeout=timeout)
         except Exception:
@@ -53,8 +48,8 @@ class WindowsLocators:
     @staticmethod
     def tournament_lobby_window(timeout=0):
         try:
-            tournament_lobby_app = pywinauto.Application(backend='uia').\
-                connect(class_name_re="TournamentLobbyDesktopWindow*", timeout=timeout).\
+            tournament_lobby_app = pywinauto.Application(backend='uia'). \
+                connect(class_name_re="TournamentLobbyDesktopWindow*", timeout=timeout). \
                 window(class_name_re="TournamentLobbyDesktopWindow*")
             return tournament_lobby_app
         except Exception:
@@ -95,8 +90,9 @@ class BasePageLocators:
 
     @staticmethod
     def main_lobby_tabs(app, timeout=0):
-        main_lobby_tabbar = find_element_or_none(app.child_window(class_name_re="LobbyPagesTabBar_QMLTYPE_*"))
         try:
+            main_lobby_tabbar = find_element_or_none(app.child_window(class_name_re="LobbyPagesTabBar_QMLTYPE_*"),
+                                                     timeout=timeout)
             tabs = main_lobby_tabbar.children()
             return tabs if len(tabs) != 0 else None
         except Exception:
@@ -109,7 +105,7 @@ class BasePageLocators:
     @staticmethod
     def play_button(app, timeout=0):
         return find_element_or_none(app.child_window(class_name_re="PokerLobbyCashTableDetailsView_QMLTYPE_*").
-                                    child_window(class_name_re="PButtonPrimary_QMLTYPE_*"))
+                                    child_window(class_name_re="PButtonPrimary_QMLTYPE_*"), timeout=timeout)
 
     @staticmethod
     def right_bottom_buttons(app, timeout=0):
@@ -166,7 +162,7 @@ class BasePageLocators:
         return find_element_or_none(app.child_window(class_name_re="TableSettingsForm_QMLTYPE_*"), timeout=timeout)
 
     @staticmethod
-    def left_menu_button(app, timeout=0):
+    def left_menu_button(app):
         buttons = app.descendants(control_type="Button")
         for button in buttons:
             if "PButtonWithIcon_QMLTYPE_" in button.class_name():
@@ -229,6 +225,7 @@ class LoginPageLocators(BasePageLocators):
     def login_button(app, timeout=0):
         return find_element_or_none(app.child_window(class_name_re="LoginPanel_QMLTYPE_*").
                                     child_window(class_name_re="PButtonPrimary_QMLTYPE_*"), timeout=timeout)
+
     @staticmethod
     def signup_button(app, timeout=0):
         return find_element_or_none(app.child_window(class_name_re="LoginPanel_QMLTYPE_*").
@@ -236,11 +233,12 @@ class LoginPageLocators(BasePageLocators):
 
 
 class PokerPageLocators(BasePageLocators):
+
     @staticmethod
     def poker_lobby_tabs(app, timeout=0):
-        poker_lobby_main_view_tabbar = find_element_or_none(
-            app.child_window(class_name_re="PokerLobbyMainViewTabBar_QMLTYPE_*"), timeout=timeout)
         try:
+            poker_lobby_main_view_tabbar = find_element_or_none(
+                app.child_window(class_name_re="PokerLobbyMainViewTabBar_QMLTYPE_*"), timeout=timeout)
             tabs = poker_lobby_main_view_tabbar.children()
             return tabs if len(tabs) != 0 else None
         except Exception:
@@ -279,12 +277,29 @@ class PokerPageLocators(BasePageLocators):
         return find_element_or_none(app.child_window(class_name_re="PokerLobbyTournamentDetailsView_*").
                                     child_window(class_name_re="PButtonSecondary*"), timeout=timeout)
 
+    @staticmethod
+    def poker_tables(app, timeout=0):
+        time_start = time.time()
+        while time.time() - time_start < timeout:
+            try:
+                list_items = app.descendants(control_type="ListItem")
+                print(list_items)
+                tables = []
+                for item in list_items:
+                    if "TableViewItemDelegate_" in item.class_name():
+                        tables.append(item)
+                return tables if len(tables) != 0 else None
+            except Exception:
+                pass
+        return None
+
+
 class MyGamesPageLocators(BasePageLocators):
     @staticmethod
     def my_games_lobby_tabs(app, timeout=0):
-        my_games_lobby_tabbar = find_element_or_none(
-            app.child_window(class_name_re="MyGamesLobbyPageTabBar_QMLTYPE_*"), timeout=timeout)
         try:
+            my_games_lobby_tabbar = find_element_or_none(
+                app.child_window(class_name_re="MyGamesLobbyPageTabBar_QMLTYPE_*"), timeout=timeout)
             tabs = my_games_lobby_tabbar.children()
             return tabs if len(tabs) != 0 else None
         except Exception:
@@ -321,18 +336,19 @@ class MyGamesPageLocators(BasePageLocators):
         return my_games_my_casino_form
 
 
-
 class ChatDialogPageLocators(BasePageLocators):
 
     @staticmethod
     def chat_text_field(app, timeout=0):
-        chat_text_field = find_element_or_none(app.child_window(class_name_re="ChatTextField_QMLTYPE_*"))
+        chat_text_field = find_element_or_none(app.child_window(class_name_re="ChatTextField_QMLTYPE_*"),
+                                               timeout=timeout)
         return chat_text_field
 
     @staticmethod
     def chat_messages_str_list(app, timeout=0):
         chat_messages_str_list = []
-        chat_messages = app.child_window(class_name_re="LobbyChat_QMLTYPE_*").descendants(control_type="Edit")
+        chat = find_element_or_none(app.child_window(class_name_re="LobbyChat_QMLTYPE_*"), timeout=timeout)
+        chat_messages = chat.descendants(control_type="Edit")
         for message in chat_messages:
             chat_messages_str_list.append(message.window_text())
         return chat_messages_str_list
@@ -344,6 +360,7 @@ class PokerTablePageLocators(BasePageLocators):
     def buy_in_form(app, timeout=0):
         buy_in_form = find_element_or_none(app.child_window(class_name_re="BuyInForm_QMLTYPE_*"), timeout=timeout)
         return buy_in_form
+
 
 class TournamentsLobbyPageLocators(BasePageLocators):
 
@@ -372,9 +389,6 @@ class TournamentsLobbyPageLocators(BasePageLocators):
     def cashier_button(app, timeout=0):
         return find_element_or_none(app.child_window(class_name_re="PButtonSecondary_*"), timeout=timeout)
 
-
-
-
-
-
-
+    @staticmethod
+    def swipe_view(app, timeout=0):
+        return find_element_or_none(app.child_window(class_name_re="SwipeView_QMLTYPE_*"), timeout=timeout)

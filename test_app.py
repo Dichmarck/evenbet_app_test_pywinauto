@@ -1,32 +1,30 @@
 import time
-
 import allure
-import pyautogui
 import pytest
-import pywinauto
 from evenbet_app_test_pywinauto.conftest import return_func_name, mouse_input, find_elem_by_text
 from evenbet_app_test_pywinauto.pages.ChatDialogPage import ChatDialogPage
 from evenbet_app_test_pywinauto.pages.TournamentLobbyPage import TournamentLobbyPage
 from evenbet_app_test_pywinauto.pages.locators import WindowsLocators
 from evenbet_app_test_pywinauto.pages.BasePage import BasePage
-from evenbet_app_test_pywinauto.pages.LoginPage import LoginPage
 from evenbet_app_test_pywinauto.pages.MyGamesPage import MyGamesPage
 from evenbet_app_test_pywinauto.pages.PokerPage import PokerPage
 from evenbet_app_test_pywinauto.pages.PokerTablePage import PokerTablePage
-from evenbet_app_test_pywinauto.pages.RegistraionPage import SignUpPage
 
 
 # pytest -s -v  --tb=short --alluredir=reports/allure
 # allure serve reports/allure
 
+
 class TestTournamentLobbyAndRegistration:
 
-    # @staticmethod
-    # def find_tab_by_text(self, tabs, text):
-    #     for tab in tabs:
-    #         if tab.window_text().strip().lower() == text.strip().lower():
-    #             return tab
-    #     return None
+    @staticmethod
+    def find_registering_tables(tables):
+        registering_tables = []
+        for table in tables:
+            table_status = table.children()[2].window_text()
+            if table_status == 'Registering':
+                registering_tables.append(table)
+        return registering_tables if len(registering_tables) != 0 else None
 
     def test_tournament_registration(self, app, screenshot_report):
         """In this test we try to open 'Tournaments' page, click 'Registration' button and find 'Register' button on
@@ -42,8 +40,14 @@ class TestTournamentLobbyAndRegistration:
             lobby_tabs[0].click_input()
             poker_lobby_tabs = page.wait_for_poker_lobby_tabs(timeout=3)
             assert poker_lobby_tabs, "Poker lobby tabs not found on poker page."
-        with allure.step("Go to 'Tournaments' tab and find registration button."):
+        with allure.step("Go to 'Tournaments' tab and find tables with status 'Registering'."):
             poker_lobby_tabs[1].click_input()
+            tables = page.wait_for_tables_in_poker(timeout=3)
+            assert tables, "No tables found on 'Tournament' page of 'Poker' tab."
+            registering_tables = TestTournamentLobbyAndRegistration.find_registering_tables(tables)
+            assert registering_tables, "No tables with status 'Registering' found on 'Tournament' page of 'Poker' tab."
+        with allure.step("Click table with status 'Registering' and wait for 'Registration' button."):
+            registering_tables[0].click_input()
             time.sleep(1)
             tour_reg_btn = page.wait_for_tournament_registration_button(timeout=3)
             assert tour_reg_btn, "Registration button not found on Tournaments page."
@@ -58,6 +62,7 @@ class TestTournamentLobbyAndRegistration:
             assert tour_reg_form_closed, "Tournament registration form didn't close."
         screenshot_report['status'] = 'passed'
 
+    @pytest.mark.go
     def test_tournament_lobby(self, app, screenshot_report):
         """In this test we try to open 'Tournaments' page, click 'Tournament Lobby' button and find Tournament
             lobby window. In window we test 'Status', 'Prize' and 'Satellites' tabs and find 'Cashier' button."""
@@ -72,8 +77,12 @@ class TestTournamentLobbyAndRegistration:
             lobby_tabs[0].click_input()
             poker_lobby_tabs = page.wait_for_poker_lobby_tabs(timeout=3)
             assert poker_lobby_tabs, "Poker lobby tabs not found on poker page."
-        with allure.step("Go to 'Tournaments' tab and find tournament lobby button."):
+        with allure.step("Go to 'Tournaments' tab and find tables."):
             poker_lobby_tabs[1].click_input()
+            tables = page.wait_for_tables_in_poker(timeout=3)
+            assert tables, "No tables found on 'Tournament' page of 'Poker' tab."
+        with allure.step("Click table and find 'Tournament lobby' button."):
+            tables[0].click_input()
             tour_lobby_btn = page.wait_for_tournament_lobby_button(timeout=3)
             assert tour_lobby_btn, "Tournament lobby button not found on Tournaments page."
         with allure.step("Click 'Tournament lobby' button and find tournament lobby window with tabs."):
@@ -105,6 +114,29 @@ class TestTournamentLobbyAndRegistration:
             assert satellites_pane, "Satellites pane didn't appear after click " \
                                     "'Satellites' tab in Tournament lobby tabbar."
             mouse_input(satellites_pane)
+
+        with allure.step("Click 'Tables' and find 'SwipeView'"):
+            tables_tab = find_elem_by_text(tabs, 'Tables')
+            assert tables_tab, "'Tables' tab not found in Tournament lobby tabbar."
+            tables_tab.click_input()
+            swipe_view = tour_lobby_page.wait_for_swipe_view(timeout=3)
+            assert swipe_view, "'SwipeView' didn't after click 'Tables' tab in Tournament lobby tabbar"
+            mouse_input(swipe_view)
+        with allure.step("Click 'Players' and find 'SwipeView'"):
+            players_tab = find_elem_by_text(tabs, 'Players')
+            assert players_tab, "'Players' tab not found in Tournament lobby tabbar."
+            players_tab.click_input()
+            swipe_view = tour_lobby_page.wait_for_swipe_view(timeout=3)
+            assert swipe_view, "'SwipeView' didn't after click 'Players' tab in Tournament lobby tabbar"
+            mouse_input(swipe_view)
+        with allure.step("Click 'Structure' and find 'SwipeView'"):
+            structure_tab = find_elem_by_text(tabs, 'Structure')
+            assert structure_tab, "'Structure' tab not found in Tournament lobby tabbar."
+            structure_tab.click_input()
+            swipe_view = tour_lobby_page.wait_for_swipe_view(timeout=3)
+            assert swipe_view, "'SwipeView' didn't after click 'Structure' tab in Tournament lobby tabbar"
+            mouse_input(swipe_view)
+
         with allure.step("Find 'Cashier' button."):
             cashier_button = tour_lobby_page.wait_for_tournament_lobby_cashier_button(timeout=1)
             assert cashier_button, "Cashier button not found in Tournament lobby window."
@@ -114,8 +146,6 @@ class TestTournamentLobbyAndRegistration:
             tour_lobby_window_closed = tour_lobby_page.ensure_element_disappears(tour_lobby_window, timeout=3)
             assert tour_lobby_window_closed, "Tournament lobby window didn't close."
         screenshot_report['status'] = 'passed'
-
-
 
 
 class TestLeftMenuBar:
@@ -137,11 +167,12 @@ class TestLeftMenuBar:
     class TestAccount:
         """In this tests we try to open every tabs in 'Account' tab of left menu bar,
             wait for it's forms and close them."""
+
         def click_left_menu_button_open_account_tab_and_close_other_tabs_and_return_tabs(self, page):
             left_menu_button = TestLeftMenuBar.find_left_menu_button(page=page)
             left_menu_button.click_input()
             left_menu_tabs = TestLeftMenuBar.find_left_menu_tabs(page=page)
-            if len(left_menu_tabs) > 7 and len(left_menu_tabs) < 14 or len(left_menu_tabs) > 14:
+            if 7 < len(left_menu_tabs) < 14 or len(left_menu_tabs) > 14:
                 left_menu_tabs[0].click_input()
                 left_menu_tabs = TestLeftMenuBar.find_left_menu_tabs(page=page)
             if len(left_menu_tabs) < 14:
@@ -179,7 +210,7 @@ class TestLeftMenuBar:
                 tabs[3].click_input()
                 account_change_password_form = page.wait_for_account_change_password_form(timeout=2)
                 assert account_change_password_form, "'Change password' form didn't appear " \
-                                     "after click 'Change password' (3) tab."
+                                                     "after click 'Change password' (3) tab."
                 mouse_input(account_change_password_form)
             with allure.step("Close 'Change password' form."):
                 page.close_dialog_by_esc(account_change_password_form)
@@ -199,7 +230,7 @@ class TestLeftMenuBar:
                 tabs[4].click_input()
                 account_change_address_form = page.wait_for_account_change_address_form(timeout=2)
                 assert account_change_address_form, "'Change address' form didn't appear " \
-                                     "after click 'Change address' (4) tab."
+                                                    "after click 'Change address' (4) tab."
                 mouse_input(account_change_address_form)
             with allure.step("Close 'Change address' form."):
                 page.close_dialog_by_esc(account_change_address_form)
@@ -219,7 +250,7 @@ class TestLeftMenuBar:
                 tabs[5].click_input()
                 account_verification_form = page.wait_for_account_verification_form(timeout=2)
                 assert account_verification_form, "'Verification' form didn't appear " \
-                                     "after click 'Verification' (5) tab."
+                                                  "after click 'Verification' (5) tab."
                 mouse_input(account_verification_form)
             with allure.step("Close 'Verification' form."):
                 page.close_dialog_by_esc(account_verification_form)
@@ -238,7 +269,7 @@ class TestLeftMenuBar:
                 tabs[6].click_input()
                 account_2fa_settings_form = page.wait_for_account_2fa_settings_form(timeout=2)
                 assert account_2fa_settings_form, "'2FA settings' form didn't appear " \
-                                     "after click '2FA settings' (6) tab."
+                                                  "after click '2FA settings' (6) tab."
                 mouse_input(account_2fa_settings_form)
             with allure.step("Close '2FA settings' form."):
                 page.close_dialog_by_esc(account_2fa_settings_form)
@@ -257,7 +288,7 @@ class TestLeftMenuBar:
                 tabs[7].click_input()
                 account_change_avatar_form = page.wait_for_account_change_avatar_form(timeout=2)
                 assert account_change_avatar_form, "'Change avatar' form didn't appear " \
-                                     "after click 'Change avatar' (7) tab."
+                                                   "after click 'Change avatar' (7) tab."
                 mouse_input(account_change_avatar_form)
             with allure.step("Close 'Change avatar' form."):
                 page.close_dialog_by_esc(account_change_avatar_form)
@@ -276,7 +307,7 @@ class TestLeftMenuBar:
                 tabs[8].click_input()
                 account_delete_account_form = page.wait_for_account_delete_account_form(timeout=2)
                 assert account_delete_account_form, "'Delete account' form didn't appear " \
-                                     "after click 'Delete account' (8) tab."
+                                                    "after click 'Delete account' (8) tab."
                 mouse_input(account_delete_account_form)
             with allure.step("Close 'Delete account' form."):
                 page.close_dialog_by_esc(account_delete_account_form)
@@ -296,13 +327,11 @@ class TestBasePageButtons:
         with allure.step("Find Cashier button."):
             cashier_button = page.find_cashier_button()
             assert cashier_button, "Cashier button not found on main page."
-
         with allure.step("Click Cashier button and wait for Cashier window."):
             cashier_button.click_input()
             cashier_window = page.wait_for_cashier_window(timeout=3)
             assert cashier_window, "Cashier window didn't appear after clicking Cashier button."
             mouse_input(cashier_window)
-
         with allure.step("Close Cashier window."):
             BasePage.close_window_by_alt_f4(cashier_window)
             window_closed = BasePage.ensure_element_disappears(cashier_window, timeout=3)
@@ -322,22 +351,20 @@ class TestBasePageButtons:
             lobby_tabs[0].click_input()
             poker_lobby_tabs = page.wait_for_poker_lobby_tabs(timeout=3)
             assert poker_lobby_tabs, "Poker lobby tabs not found on poker page."
-        with allure.step("Go to 'Cash Tables' tab and find cash tables view."):
+        with allure.step("Go to 'Cash Tables' tab and find cash tables."):
             poker_lobby_tabs[0].click_input()
-            poker_lobby_cash_tables_view = page.wait_for_poker_lobby_cash_tables_view(timeout=3)
-            assert poker_lobby_cash_tables_view, "Cash tables view didn't appear after clicking 'Cash Tables' tab."
-            mouse_input(poker_lobby_cash_tables_view)
-        with allure.step("Find and click Play button."):
-            play_button = page.find_play_button()
-            assert play_button, "Play button not found on main page."
+            cash_tables = page.wait_for_tables_in_poker()
+            assert cash_tables, "No tables found on 'Cash Tables' page of 'Poker' tab."
+        with allure.step("Click table and wait for 'Play' button."):
+            cash_tables[0].click_input()
+            play_button = page.wait_for_play_button(timeout=3)
+            assert play_button, "Play button not found after click table on 'Cash tables' page."
+        with allure.step("Click 'Play' button and wait for Poker Table window and connect to it."):
             play_button.click_input()
-
-        with allure.step("Find Poker Table window and connect to it."):
-            poker_table_window = WindowsLocators.poker_table_window(timeout=5)
+            poker_table_window = WindowsLocators.poker_table_window(timeout=10)
             assert poker_table_window, "Poker window didn't appear after click Play button."
             mouse_input(poker_table_window)
             poker_page = PokerTablePage(app=poker_table_window)
-
         with allure.step("Find and close BuyIn form."):
             buy_in_form = poker_page.wait_for_buy_in_form(timeout=3)
             if buy_in_form:
@@ -345,7 +372,6 @@ class TestBasePageButtons:
                 PokerPage.close_dialog_by_esc(buy_in_form)
             buy_in_form_closed = PokerPage.ensure_element_disappears(buy_in_form, timeout=2)
             assert buy_in_form_closed, "Buy In form didn't close."
-
         with allure.step("Close Poker Table window."):
             PokerTablePage.close_window_by_alt_f4(poker_table_window)
             poker_table_window_closed = PokerTablePage.ensure_element_disappears(poker_table_window, timeout=3)
@@ -353,10 +379,9 @@ class TestBasePageButtons:
         screenshot_report['status'] = 'Passed'
 
 
-
 class TestRightTopSettings:
 
-    def click_right_top_settings_button_and_find_tabs(self, app, screenshot_report):
+    def click_right_top_settings_button_and_find_tabs(self, app):
         with allure.step("Find right top settings button."):
             page = BasePage(app=app)
             right_top_settings_button = page.find_right_top_settings_button()
@@ -367,7 +392,6 @@ class TestRightTopSettings:
             assert settings_tabs, "Settings menu didn't appear after click right top settings button."
         return settings_tabs
 
-
     def test_settings_sounds(self, app, screenshot_report):
         """In this test we try to press right top settings button, choose 'Sounds' settings tab,
                 check that 'Sounds settings' window appears and then close it."""
@@ -375,11 +399,11 @@ class TestRightTopSettings:
             page = BasePage(app=app)
             screenshot_report['window'] = app
             screenshot_report['file_name'] = return_func_name()
-        settings_tabs = self.click_right_top_settings_button_and_find_tabs(app, screenshot_report)
+        settings_tabs = self.click_right_top_settings_button_and_find_tabs(app)
         with allure.step("Click 'Sounds settings' tab and wait for 'Sounds Settings' form."):
             settings_tabs[0].click_input()
             sounds_settings_form = page.wait_for_sounds_settings_form(timeout=2)
-            assert sounds_settings_form, "Sounds settings form didin't appear " \
+            assert sounds_settings_form, "Sounds settings form didn't appear " \
                                          "after click 'Sounds' tab in right top settings menu."
             mouse_input(sounds_settings_form)
         with allure.step("Close 'Sounds' settings form."):
@@ -395,12 +419,12 @@ class TestRightTopSettings:
             page = BasePage(app=app)
             screenshot_report['window'] = app
             screenshot_report['file_name'] = return_func_name()
-        settings_tabs = self.click_right_top_settings_button_and_find_tabs(app, screenshot_report)
+        settings_tabs = self.click_right_top_settings_button_and_find_tabs(app)
         with allure.step("Click 'Rates Slider settings' tab and wait for 'Sounds Settings' form."):
             settings_tabs[1].click_input()
             rates_slider_settings_form = page.wait_for_rates_slider_settings_form(timeout=2)
-            assert rates_slider_settings_form, "Rates slider settings form didin't appear " \
-                                         "after click 'Rates Slider' tab in right top settings menu."
+            assert rates_slider_settings_form, "Rates slider settings form didn't appear " \
+                                               "after click 'Rates Slider' tab in right top settings menu."
             mouse_input(rates_slider_settings_form)
         with allure.step("Close 'Rates Slider settings' form."):
             page.close_dialog_by_esc(rates_slider_settings_form)
@@ -415,12 +439,12 @@ class TestRightTopSettings:
             page = BasePage(app=app)
             screenshot_report['window'] = app
             screenshot_report['file_name'] = return_func_name()
-        settings_tabs = self.click_right_top_settings_button_and_find_tabs(app, screenshot_report)
+        settings_tabs = self.click_right_top_settings_button_and_find_tabs(app)
         with allure.step("Click 'System & Chat settings' tab and wait for 'System & Chat' form."):
             settings_tabs[2].click_input()
             system_chat_settings_form = page.wait_for_system_chat_settings_form(timeout=2)
-            assert system_chat_settings_form, "System & chat settings form didin't appear " \
-                                               "after click 'System & Chat' tab in right top settings menu."
+            assert system_chat_settings_form, "System & chat settings form didn't appear " \
+                                              "after click 'System & Chat' tab in right top settings menu."
             mouse_input(system_chat_settings_form)
         with allure.step("Close 'System & Chat settings' form."):
             page.close_dialog_by_esc(system_chat_settings_form)
@@ -435,11 +459,11 @@ class TestRightTopSettings:
             page = BasePage(app=app)
             screenshot_report['window'] = app
             screenshot_report['file_name'] = return_func_name()
-        settings_tabs = self.click_right_top_settings_button_and_find_tabs(app, screenshot_report)
+        settings_tabs = self.click_right_top_settings_button_and_find_tabs(app)
         with allure.step("Click 'BuyIn & Rebuy settings' tab and wait for 'BuyIn & rebuy' form."):
             settings_tabs[3].click_input()
             buyin_rebuy_settings_form = page.wait_for_buyin_rebuy_settings_form(timeout=2)
-            assert buyin_rebuy_settings_form, "BuyIn & Rebuy settings form didin't appear " \
+            assert buyin_rebuy_settings_form, "BuyIn & Rebuy settings form didn't appear " \
                                               "after click 'BuyIn & rebuy' tab in right top settings menu."
             mouse_input(buyin_rebuy_settings_form)
         with allure.step("Close 'BuyIn & Rebuy settings' form."):
@@ -455,19 +479,18 @@ class TestRightTopSettings:
             page = BasePage(app=app)
             screenshot_report['window'] = app
             screenshot_report['file_name'] = return_func_name()
-        settings_tabs = self.click_right_top_settings_button_and_find_tabs(app, screenshot_report)
+        settings_tabs = self.click_right_top_settings_button_and_find_tabs(app)
         with allure.step("Click 'Table settings' settings tab and wait for 'Table settings' form."):
             settings_tabs[4].click_input()
             table_settings_form = page.wait_for_table_settings_form(timeout=2)
-            assert table_settings_form, "Table settings form didin't appear " \
-                                              "after click 'Table settings' tab in right top settings menu."
+            assert table_settings_form, "Table settings form didn't appear " \
+                                        "after click 'Table settings' tab in right top settings menu."
             mouse_input(table_settings_form)
         with allure.step("Close 'Table settings' form."):
             page.close_dialog_by_esc(table_settings_form)
             table_settings_form_closed = page.ensure_element_disappears(table_settings_form, timeout=3)
             assert table_settings_form_closed, "'Table settings' form didn't close."
         screenshot_report['status'] = 'passed'
-
 
 
 class TestRightBottomButtons:
@@ -482,10 +505,10 @@ class TestRightBottomButtons:
         with allure.step("Find right bottom buttons."):
             right_bottom_buttons = page.find_right_bottom_buttons()
             assert right_bottom_buttons, "Right bottom buttons not found on main page."
-        with allure.step("Click 'Chat' and check that chat-dialog appefor_testsared."):
+        with allure.step("Click 'Chat' and check that chat-dialog appeared."):
             right_bottom_buttons[0].click_input()
             chat_dialog = page.wait_for_chat_dialog(timeout=3)
-            assert chat_dialog, "Chat dialog didn't appear after clickfor_tests right bottom 'Chat' button."
+            assert chat_dialog, "Chat dialog didn't appear after click right bottom 'Chat' button."
             mouse_input(chat_dialog)
         with allure.step("Generate new message and check that message is not contained in chat yet."):
             new_message = str(int(time.time()))
@@ -547,7 +570,6 @@ class TestRightBottomButtons:
             my_tournaments_window_closed = page.ensure_element_disappears(my_tournaments_window, timeout=2)
             assert my_tournaments_window_closed, "'My Tournaments' window didn't close."
         screenshot_report['status'] = 'Passed'
-
 
 
 class TestTabsInTabBar:
@@ -639,8 +661,4 @@ class TestTabsInTabBar:
             mouse_input(my_games_my_casino_form)
         screenshot_report['status'] = 'Passed'
 
-
-
-
 # pytest -s -v  --tb=short --alluredir=reports/allure
-

@@ -28,5 +28,21 @@ class PokerPage(BasePage):
         print("Poker lobby spins view: ", time.time() - time_start)
         return poker_lobby_spins_view
 
+    def wait_for_tournament_registration_button(self, timeout=0):
+        time_start = time.time()
+        tournament_registration_button = PokerPageLocators.tournament_registration_button(self.app, timeout=timeout)
+        print("Tournament registration button: ", time.time() - time_start)
+        return tournament_registration_button
 
+    def wait_for_tournament_lobby_button(self, timeout=0):
+        time_start = time.time()
+        tournament_lobby_button = PokerPageLocators.tournament_lobby_button(self.app, timeout=timeout)
+        print("Tournament lobby button: ", time.time() - time_start)
+        return tournament_lobby_button
+
+    def wait_for_register_button_on_tournament_registration_form(self, timeout=0):
+        time_start = time.time()
+        reg_from_reg_btn = PokerPageLocators.register_button_on_tournament_registration_form(self.app, timeout=timeout)
+        print("Register button on registration form: ", time.time() - time_start)
+        return reg_from_reg_btn
 

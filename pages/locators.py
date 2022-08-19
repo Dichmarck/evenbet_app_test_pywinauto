@@ -10,6 +10,8 @@ def find_element_or_none(element, timeout=0):
     time_start = time.time()
     while time_now - time_start <= timeout:
         try:
+            #element.rectangle()
+            #return element
             return element.wrapper_object()
         except pywinauto.findwindows.ElementNotFoundError:
             pass
@@ -38,7 +40,6 @@ class WindowsLocators:
         except Exception:
             return None
 
-
     @staticmethod
     def my_tournaments_window(timeout=0):
         try:
@@ -48,6 +49,17 @@ class WindowsLocators:
                                         child_window(class_name_re="MyTournamentsForm_QMLTYPE_*"), timeout=timeout)
         except Exception:
             return None
+
+    @staticmethod
+    def tournament_lobby_window(timeout=0):
+        try:
+            tournament_lobby_app = pywinauto.Application(backend='uia').\
+                connect(class_name_re="TournamentLobbyDesktopWindow*", timeout=timeout).\
+                window(class_name_re="TournamentLobbyDesktopWindow*")
+            return tournament_lobby_app
+        except Exception:
+            return None
+
 
 class BasePageLocators:
 
@@ -153,7 +165,55 @@ class BasePageLocators:
     def table_settings_form(app, timeout=0):
         return find_element_or_none(app.child_window(class_name_re="TableSettingsForm_QMLTYPE_*"), timeout=timeout)
 
+    @staticmethod
+    def left_menu_button(app, timeout=0):
+        buttons = app.descendants(control_type="Button")
+        for button in buttons:
+            if "PButtonWithIcon_QMLTYPE_" in button.class_name():
+                return button
+        return None
 
+    @staticmethod
+    def left_menu_tabs(app, timeout=0):
+        left_menu_bar = find_element_or_none(app.child_window(class_name="QQuickPopupItem"), timeout=timeout)
+        try:
+            tabs = left_menu_bar.children(control_type="ListItem")
+            return tabs if len(tabs) != 0 else None
+        except Exception:
+            return None
+
+    @staticmethod
+    def account_information_form(app, timeout=0):
+        return find_element_or_none(app.child_window(class_name_re="AccountInformationFormTemplate_*"), timeout=timeout)
+
+    @staticmethod
+    def account_change_password_form(app, timeout=0):
+        return find_element_or_none(app.child_window(class_name_re="ChangePasswordFormTemplate*"), timeout=timeout)
+
+    @staticmethod
+    def account_change_address_form(app, timeout=0):
+        return find_element_or_none(app.child_window(class_name_re="ChangeAddressFormTemplate*"), timeout=timeout)
+
+    @staticmethod
+    def account_verification_form(app, timeout=0):
+        return find_element_or_none(app.child_window(class_name_re="VerificationFormTemplate*"), timeout=timeout)
+
+    @staticmethod
+    def account_2fa_settings_form(app, timeout=0):
+        return find_element_or_none(app.child_window(class_name_re="TFASettingsFormTemplate*"), timeout=timeout)
+
+    @staticmethod
+    def account_change_avatar_form(app, timeout=0):
+        return find_element_or_none(app.child_window(class_name_re="ChangeAvatarFormTemplate*"), timeout=timeout)
+
+    @staticmethod
+    def account_delete_account_form(app, timeout=0):
+        return find_element_or_none(app.child_window(class_name_re="MessageBoxDesktopDialog*"), timeout=timeout)
+
+    @staticmethod
+    def logout_dialog_yes_button(app, timeout=0):
+        return find_element_or_none(app.child_window(class_name_re="MessageBoxDesktopDialog_*").
+                                    child_window(class_name_re="PButton_QMLTYPE_*"), timeout=timeout)
 
 
 class LoginPageLocators(BasePageLocators):
@@ -204,6 +264,21 @@ class PokerPageLocators(BasePageLocators):
                                           timeout=timeout)
         return spins_view
 
+    @staticmethod
+    def tournament_registration_button(app, timeout=0):
+        return find_element_or_none(app.child_window(class_name_re="PokerLobbyTournamentDetailsView_*").
+                                    child_window(class_name_re="PButtonPrimary_*"), timeout=timeout)
+
+    @staticmethod
+    def register_button_on_tournament_registration_form(app, timeout=0):
+        return find_element_or_none(app.child_window(class_name_re="TournamentRegistrationForm_*").
+                                    child_window(class_name_re="PButtonPrimary_*"), timeout=timeout)
+
+    @staticmethod
+    def tournament_lobby_button(app, timeout=0):
+        return find_element_or_none(app.child_window(class_name_re="PokerLobbyTournamentDetailsView_*").
+                                    child_window(class_name_re="PButtonSecondary*"), timeout=timeout)
+
 class MyGamesPageLocators(BasePageLocators):
     @staticmethod
     def my_games_lobby_tabs(app, timeout=0):
@@ -246,6 +321,7 @@ class MyGamesPageLocators(BasePageLocators):
         return my_games_my_casino_form
 
 
+
 class ChatDialogPageLocators(BasePageLocators):
 
     @staticmethod
@@ -266,13 +342,35 @@ class PokerTablePageLocators(BasePageLocators):
 
     @staticmethod
     def buy_in_form(app, timeout=0):
-        buy_in_form = find_element_or_none(app.child_window(class_name_re="BuyInForm_QMLTYPE_*"))
+        buy_in_form = find_element_or_none(app.child_window(class_name_re="BuyInForm_QMLTYPE_*"), timeout=timeout)
         return buy_in_form
 
+class TournamentsLobbyPageLocators(BasePageLocators):
 
+    @staticmethod
+    def tabs(app, timeout=0):
+        tabbar = find_element_or_none(app.child_window(class_name_re="PTabBarHeader_*"), timeout=timeout)
+        try:
+            tabs = tabbar.children()
+            return tabs if len(tabs) != 0 else None
+        except Exception:
+            return None
 
+    @staticmethod
+    def status_pane(app, timeout=0):
+        return find_element_or_none(app.child_window(class_name_re="TournamentStatusTab_*"), timeout=timeout)
 
+    @staticmethod
+    def prize_pane(app, timeout=0):
+        return find_element_or_none(app.child_window(class_name_re="TournamentPrizeTab*"), timeout=timeout)
 
+    @staticmethod
+    def satellites_pane(app, timeout=0):
+        return find_element_or_none(app.child_window(class_name_re="TournamentSatellitesTab*"), timeout=timeout)
+
+    @staticmethod
+    def cashier_button(app, timeout=0):
+        return find_element_or_none(app.child_window(class_name_re="PButtonSecondary_*"), timeout=timeout)
 
 
 

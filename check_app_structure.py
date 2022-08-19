@@ -6,6 +6,7 @@ import _ctypes
 import pyautogui
 import pywinauto
 from evenbet_app_test_pywinauto.constants import *
+from evenbet_app_test_pywinauto.conftest import mouse_input
 from pywinauto import Desktop
 from evenbet_app_test_pywinauto.pages.BasePage import BasePage
 import re
@@ -30,13 +31,6 @@ def is_inside_window(elem_rect, win_rect):
         return False
     return True
 
-
-def dnd_scroll(dist):
-    pyautogui.mouseDown(button='left')
-    pyautogui.move(0, dist)
-    pyautogui.mouseUp(button='left')
-
-
 def ensure_element_disappears(element, timeout=0):
     time_start = time.time()
     while time.time() - time_start <= timeout:
@@ -48,19 +42,20 @@ def ensure_element_disappears(element, timeout=0):
     print(time.time() - time_start)
     return False
 
-def whoami():
-    frame = inspect.currentframe()
-    return inspect.getframeinfo(inspect.currentframe()).function
 
-def some_func():
-    print("hello")
-    print(inspect.getframeinfo(inspect.currentframe()).function)
-    print(sys._getframe(0).f_code.co_name)
+#application = pywinauto.Application(backend='uia').start(APP_PATH).\
+#                        connect(class_name_re=MAIN_WINDOW_CLASS_NAME_RE, timeout=30)
+#
+#app_win = application.window(class_name_re=MAIN_WINDOW_CLASS_NAME_RE)
 
-application = pywinauto.Application(backend='uia').start(APP_PATH).\
-                        connect(class_name_re=MAIN_WINDOW_CLASS_NAME_RE, timeout=30)
-
-app_win = application.window(class_name_re=MAIN_WINDOW_CLASS_NAME_RE)
 time_start = time.time()
-print(app_win.child_window(class_name="QQuickPopupItem").children(control_type="MenuItem"))
+
+tour_lobby_win = WindowsLocators.tournament_lobby_window(timeout=5)
+
+
+tabs = tour_lobby_win.child_window(class_name_re="PTabBarHeader_*").children()
+print(tabs[0].window_text())
+
+
+
 print(time.time() - time_start)

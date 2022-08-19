@@ -1,6 +1,7 @@
 import time
 
 import _ctypes
+import allure
 import pywinauto
 from .locators import *
 
@@ -51,9 +52,9 @@ class BasePage:
         print("Login window: ", time.time() - time_start)
         return login_window
 
-    def find_main_page_login_button(self):
+    def wait_for_main_page_login_button(self, timeout=0):
         time_start = time.time()
-        login_button_main_page = BasePageLocators.login_button_main_page(self.app)
+        login_button_main_page = BasePageLocators.login_button_main_page(self.app, timeout=timeout)
         print("Main page login button: ", time.time() - time_start)
         return login_button_main_page
 
@@ -152,6 +153,75 @@ class BasePage:
         table_settings_form = BasePageLocators.table_settings_form(self.app, timeout=timeout)
         print("Table settings form: ", time.time() - time_start)
         return table_settings_form
+
+    def find_left_menu_button(self):
+        time_start = time.time()
+        left_menu_button = BasePageLocators.left_menu_button(self.app)
+        print("Left Menu button: ", time.time() - time_start)
+        return left_menu_button
+
+    def wait_for_left_menu_tabs(self, timeout=0):
+        time_start = time.time()
+        left_menu_tabs = BasePageLocators.left_menu_tabs(self.app, timeout=timeout)
+        print("Left Menu tabs: ", time.time() - time_start)
+        return left_menu_tabs
+
+    def wait_for_account_information_form(self, timeout=0):
+        time_start = time.time()
+        account_information_form = BasePageLocators.account_information_form(self.app, timeout=timeout)
+        print("Account information form: ", time.time() - time_start)
+        return account_information_form
+
+    def wait_for_account_change_password_form(self, timeout=0):
+        time_start = time.time()
+        account_change_password_form = BasePageLocators.account_change_password_form(self.app, timeout=timeout)
+        print("Change password form: ", time.time() - time_start)
+        return account_change_password_form
+
+    def wait_for_account_change_address_form(self, timeout=0):
+        time_start = time.time()
+        account_change_address_form = BasePageLocators.account_change_address_form(self.app, timeout=timeout)
+        print("Change address form: ", time.time() - time_start)
+        return account_change_address_form
+
+    def wait_for_account_verification_form(self, timeout=0):
+        time_start = time.time()
+        account_verification_form = BasePageLocators.account_verification_form(self.app, timeout=timeout)
+        print("Verification form: ", time.time() - time_start)
+        return account_verification_form
+
+    def wait_for_account_2fa_settings_form(self, timeout=0):
+        time_start = time.time()
+        account_2fa_settings_form = BasePageLocators.account_2fa_settings_form(self.app, timeout=timeout)
+        print("2FA settings form: ", time.time() - time_start)
+        return account_2fa_settings_form
+
+    def wait_for_account_change_avatar_form(self, timeout=0):
+        time_start = time.time()
+        account_change_avatar_form = BasePageLocators.account_change_avatar_form(self.app, timeout=timeout)
+        print("Change avatar form: ", time.time() - time_start)
+        return account_change_avatar_form
+
+    def wait_for_account_delete_account_form(self, timeout=0):
+        time_start = time.time()
+        account_delete_account_form = BasePageLocators.account_delete_account_form(self.app, timeout=timeout)
+        print("Delete account form: ", time.time() - time_start)
+        return account_delete_account_form
+
+    def wait_for_tournament_lobby_window(self, timeout=0):
+        time_start = time.time()
+        tournament_lobby_window = WindowsLocators.tournament_lobby_window(timeout=timeout)
+        print("Tournament lobby windows: ", time.time() - time_start)
+        return tournament_lobby_window
+
+    def wait_for_logout_dialog_yes_button(self, timeout=0):
+        time_start = time.time()
+        logout_dialog_yes_button = BasePageLocators.logout_dialog_yes_button(self.app, timeout=timeout)
+        print("Logout dialog YES button: ", time.time() - time_start)
+        return logout_dialog_yes_button
+
+
+
 
 
 

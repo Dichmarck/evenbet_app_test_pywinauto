@@ -1,7 +1,7 @@
 import time
 import allure
 import pytest
-from evenbet_app_test_pywinauto.conftest import return_func_name, mouse_input, find_elem_by_text
+from evenbet_app_test_pywinauto.utils import return_func_name, mouse_input, find_elem_by_text
 from evenbet_app_test_pywinauto.pages.ChatDialogPage import ChatDialogPage
 from evenbet_app_test_pywinauto.pages.TournamentLobbyPage import TournamentLobbyPage
 from evenbet_app_test_pywinauto.pages.locators import WindowsLocators
@@ -11,8 +11,29 @@ from evenbet_app_test_pywinauto.pages.PokerPage import PokerPage
 from evenbet_app_test_pywinauto.pages.PokerTablePage import PokerTablePage
 
 
-# pytest -s -v  --tb=short --alluredir=reports/allure
+# pytest -s -v --tb=short --alluredir=reports/allure
 # allure serve reports/allure
+
+def test_languages_list_appears_after_click_languages_button(app, screenshot_report):
+    """In this test we try to click languages button and wait for list of languages."""
+    with allure.step("Initializing PokerPage."):
+        page = PokerPage(app=app)
+        screenshot_report['window'] = app
+        screenshot_report['file_name'] = return_func_name()
+    with allure.step("Find languages button."):
+        languages_button = page.wait_for_languages_button(timeout=3)
+        assert languages_button, "Languages button not found on main page."
+    with allure.step("Click languages button and wait for languages list."):
+        languages_button.click_input()
+        languages_list = page.wait_for_languages_list(timeout=3)
+        assert languages_list, "No languages appeared after click languages button."
+        mouse_input(languages_list[0])
+        assert len(languages_list) >= 12, f"Not all languages found (should be 12, but {len(languages_list)} found)."
+    with allure.step("Close languages list."):
+        page.close_dialog_by_esc(languages_list[0])
+        languages_list_closed = page.ensure_element_disappears(languages_list[0], timeout=3)
+        assert languages_list_closed, "Language list didn't close."
+    screenshot_report['status'] = 'passed'
 
 
 class TestTournamentLobbyAndRegistration:
@@ -62,7 +83,6 @@ class TestTournamentLobbyAndRegistration:
             assert tour_reg_form_closed, "Tournament registration form didn't close."
         screenshot_report['status'] = 'passed'
 
-    @pytest.mark.go
     def test_tournament_lobby(self, app, screenshot_report):
         """In this test we try to open 'Tournaments' page, click 'Tournament Lobby' button and find Tournament
             lobby window. In window we test 'Status', 'Prize' and 'Satellites' tabs and find 'Cashier' button."""
@@ -127,7 +147,7 @@ class TestTournamentLobbyAndRegistration:
             assert players_tab, "'Players' tab not found in Tournament lobby tabbar."
             players_tab.click_input()
             swipe_view = tour_lobby_page.wait_for_swipe_view(timeout=3)
-            assert swipe_view, "'SwipeView' didn't after click 'Players' tab in Tournament lobby tabbar"
+            assert swipe_view, "'SwipeView' didn't appear after click 'Players' tab in Tournament lobby tabbar"
             mouse_input(swipe_view)
         with allure.step("Click 'Structure' and find 'SwipeView'"):
             structure_tab = find_elem_by_text(tabs, 'Structure')
@@ -315,6 +335,93 @@ class TestLeftMenuBar:
                 assert form_closed, "'Delete account' form didn't close."
             screenshot_report['status'] = 'passed'
 
+    def test_create_table(self, app, screenshot_report):
+        """In this test we try to open left menu, choose 'Create table' (-5) tab and wait for 'Create table' form 
+            with 'Create table' button."""
+        with allure.step("Initializing BasePage."):
+            page = BasePage(app=app)
+            screenshot_report['window'] = app
+            screenshot_report['file_name'] = return_func_name()
+        with allure.step("Open left menu and find tabs."):
+            left_menu_button = self.find_left_menu_button(page=page)
+            left_menu_button.click_input()
+            tabs = self.find_left_menu_tabs(page=page)
+        with allure.step("Click 'Create Table' tab (-5) and wait for Create table form."):
+            tabs[-5].click_input()
+            create_table_button = page.wait_for_create_table_button_on_create_table_form(timeout=3)
+            assert create_table_button, "'Create table' form didn't appear after click 'Create table' (-5) tab."
+            mouse_input(create_table_button)
+        with allure.step("Close 'Create Table' form."):
+            page.close_dialog_by_esc(create_table_button)
+            create_table_closed = page.ensure_element_disappears(create_table_button, timeout=3)
+            assert create_table_closed, "'Create table' didn't close."
+        screenshot_report['status'] = 'passed'
+
+    def test_my_tables(self, app, screenshot_report):
+        """In this test we try to open left menu, choose 'My Tables' (-4) tab, wait for 'My Tables' dialog."""
+        with allure.step("Initializing BasePage."):
+            page = BasePage(app=app)
+            screenshot_report['window'] = app
+            screenshot_report['file_name'] = return_func_name()
+        with allure.step("Open left menu and find tabs."):
+            left_menu_button = self.find_left_menu_button(page=page)
+            left_menu_button.click_input()
+            tabs = self.find_left_menu_tabs(page=page)
+        with allure.step("Click 'My Tables' tab (-4) and wait for my tables dialog."):
+            tabs[-4].click_input()
+            my_tables_dialog = page.wait_for_my_tables_dialog(timeout=3)
+            assert my_tables_dialog, "'My Tables' dialog didn't appear after click 'My Tables' (-4) tab."
+            mouse_input(my_tables_dialog)
+        with allure.step("Close 'My tables' dialog."):
+            page.close_dialog_by_esc(my_tables_dialog)
+            my_tables_dialog_closed = page.ensure_element_disappears(my_tables_dialog, timeout=3)
+            assert my_tables_dialog_closed, "'My Tables' form didn't close after click 'OK' button."
+        screenshot_report['status'] = 'passed'
+
+    def test_create_tournament(self, app, screenshot_report):
+        """In this test we try to open left menu, choose 'Create tournament' (-3) tab
+            and wait for 'Create tournament' form with 'Create tournament' button."""
+        with allure.step("Initializing BasePage."):
+            page = BasePage(app=app)
+            screenshot_report['window'] = app
+            screenshot_report['file_name'] = return_func_name()
+        with allure.step("Open left menu and find tabs."):
+            left_menu_button = self.find_left_menu_button(page=page)
+            left_menu_button.click_input()
+            tabs = self.find_left_menu_tabs(page=page)
+        with allure.step("Click 'Create tournament' tab (-3) and wait for Create tournament form."):
+            tabs[-3].click_input()
+            create_tournament_button = page.wait_for_create_tournament_button_on_create_tournament_form(timeout=3)
+            assert create_tournament_button, "'Create tournament' form didn't appear after " \
+                                             "click 'Create tournament' (-3) tab."
+            mouse_input(create_tournament_button)
+        with allure.step("Close 'Create tournament' form."):
+            page.close_dialog_by_esc(create_tournament_button)
+            create_tournament_closed = page.ensure_element_disappears(create_tournament_button, timeout=3)
+            assert create_tournament_closed, "'Create tournament' didn't close."
+        screenshot_report['status'] = 'passed'
+
+    def test_about(self, app, screenshot_report):
+        """In this test we try to open left menu, choose 'About' (-2) tab, wait for 'About' form with 'OK' button 
+                and click it"""
+        with allure.step("Initializing BasePage."):
+            page = BasePage(app=app)
+            screenshot_report['window'] = app
+            screenshot_report['file_name'] = return_func_name()
+        with allure.step("Open left menu and find tabs."):
+            left_menu_button = self.find_left_menu_button(page=page)
+            left_menu_button.click_input()
+            tabs = self.find_left_menu_tabs(page=page)
+        with allure.step("Click 'About' tab (-2) and wait for About form."):
+            tabs[-2].click_input()
+            ok_button = page.wait_for_ok_button_on_about_form(timeout=3)
+            assert ok_button, "'About' form didn't appear after click 'About' (-2) tab."
+        with allure.step("Click 'OK' button."):
+            ok_button.click_input()
+            ok_button_closed = page.ensure_element_disappears(ok_button, timeout=3)
+            assert ok_button_closed, "'About' form didn't close after click 'OK' button."
+        screenshot_report['status'] = 'passed'
+
 
 class TestBasePageButtons:
 
@@ -353,7 +460,7 @@ class TestBasePageButtons:
             assert poker_lobby_tabs, "Poker lobby tabs not found on poker page."
         with allure.step("Go to 'Cash Tables' tab and find cash tables."):
             poker_lobby_tabs[0].click_input()
-            cash_tables = page.wait_for_tables_in_poker()
+            cash_tables = page.wait_for_tables_in_poker(timeout=3)
             assert cash_tables, "No tables found on 'Cash Tables' page of 'Poker' tab."
         with allure.step("Click table and wait for 'Play' button."):
             cash_tables[0].click_input()

@@ -1,14 +1,12 @@
 import datetime
 import io
 import os
-import sys
 import PIL.Image
 import allure
 import pyautogui
 import pytest
 
 from evenbet_app_test_pywinauto.constants import *
-from evenbet_app_test_pywinauto.pages.BasePage import BasePage
 from evenbet_app_test_pywinauto.pages.LoginPage import LoginPage
 from evenbet_app_test_pywinauto.pages.locators import *
 
@@ -64,20 +62,19 @@ def app():
 
 @pytest.fixture(scope='module')
 def test_app():
+    """This fixture just starts app and connects to it. It is made for testing test."""
     application = pywinauto.Application(backend='uia').start(APP_PATH). \
         connect(class_name_re=MAIN_WINDOW_CLASS_NAME_RE, timeout=30)
     app_win = application.window(class_name_re=MAIN_WINDOW_CLASS_NAME_RE)
     yield app_win
 
 
-# def make_screenshot():
-
-
-
 @pytest.fixture(scope="function")
 def screenshot_report():
     feedback = {"window": None, "file_name": "", "status": "failed"}
     yield feedback
+    # We pass feedback dict in test function, assign there window and file_name.
+    # And if test passes, we change status to 'passed'.
     if feedback['window'] and feedback['status'] == 'failed':
         window_rect = feedback['window'].rectangle()
         left = window_rect.left
@@ -91,25 +88,7 @@ def screenshot_report():
         name_and_path = f"reports/screenshots/{date}/{name}.jpg"
         pyautogui.screenshot(region=(left, top, width, height)).save(name_and_path)
         screenshot = PIL.Image.open(name_and_path)
-        with io.BytesIO() as buf:
+        with io.BytesIO() as buf:  # Open saved screenshot as bytes-like object and attach it to allure report.
             screenshot.save(buf, 'jpeg')
             image_bytes = buf.getvalue()
             allure.attach(image_bytes, name)
-
-
-def return_func_name():
-    return sys._getframe(1).f_code.co_name
-
-
-def mouse_input(element, duration=0):
-    rect = element.rectangle()
-    center_h = int((rect.right + rect.left) / 2)
-    center_v = int((rect.bottom + rect.top) / 2)
-    pyautogui.moveTo(center_h, center_v, duration)
-
-
-def find_elem_by_text(elements, text):
-    for elem in elements:
-        if elem.window_text().strip().lower() == text.strip().lower():
-            return elem
-    return None

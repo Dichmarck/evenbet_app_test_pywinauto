@@ -211,6 +211,39 @@ class BasePageLocators:
         return find_element_or_none(app.child_window(class_name_re="MessageBoxDesktopDialog_*").
                                     child_window(class_name_re="PButton_QMLTYPE_*"), timeout=timeout)
 
+    @staticmethod
+    def create_table_button_on_create_table_form(app, timeout=0):
+        return find_element_or_none(app.child_window(class_name_re="CreateTableFormTemplate_*").
+                                    child_window(class_name_re="PButtonPrimary_*"), timeout=timeout)
+
+    @staticmethod
+    def create_tournament_button_on_create_tournament_form(app, timeout=0):
+        return find_element_or_none(app.child_window(class_name_re="CreateTournamentFormTemplate_*").
+                                    child_window(class_name_re="PButtonPrimary_*"), timeout=timeout)
+
+    @staticmethod
+    def ok_button_on_about_form(app, timeout=0):
+        return find_element_or_none(app.child_window(class_name_re="AboutForm_QMLTYPE_*").
+                                    child_window(class_name_re="PButtonPrimary_*"), timeout=timeout)
+
+    @staticmethod
+    def languages_button(app, timeout=0):
+        return find_element_or_none(app.child_window(class_name_re="PComboBoxLanguages_*"), timeout=timeout)
+
+    @staticmethod
+    def languages_list(app, timeout=0):
+        languages_popup_item = find_element_or_none(app.child_window(class_name="QQuickPopupItem"), timeout=timeout)
+        try:
+            list_items = languages_popup_item.children(control_type="ListItem")
+            languages = []
+            for item in list_items:
+                if "PItemDelegateLanguages" in item.class_name():
+                    languages.append(item)
+            return languages if len(languages) != 0 else None
+        except Exception:
+            return None
+
+
 
 class LoginPageLocators(BasePageLocators):
     @staticmethod
@@ -280,15 +313,15 @@ class PokerPageLocators(BasePageLocators):
     @staticmethod
     def poker_tables(app, timeout=0):
         time_start = time.time()
-        while time.time() - time_start < timeout:
+        while time.time() - time_start <= timeout:
             try:
                 list_items = app.descendants(control_type="ListItem")
-                print(list_items)
                 tables = []
                 for item in list_items:
                     if "TableViewItemDelegate_" in item.class_name():
                         tables.append(item)
-                return tables if len(tables) != 0 else None
+                if len(tables) != 0:
+                    return tables
             except Exception:
                 pass
         return None

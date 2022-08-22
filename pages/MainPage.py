@@ -8,7 +8,7 @@ class MainPage:
 
     @timer("Right top close app cross")
     def find_close_app_right_top_cross(self):
-        close_app_right_top_cross = MainPageLocators.close_app_right_top_button(self.app)
+        close_app_right_top_cross = MainPageLocators.close_main_win_right_top_button(self.app)
         return close_app_right_top_cross
 
     @timer("Fullscreen button")

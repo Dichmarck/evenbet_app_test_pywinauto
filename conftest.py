@@ -6,8 +6,8 @@ import allure
 import pyautogui
 import pytest
 import pywinauto
-from evenbet_app_test_pywinauto.constants import APP_PATH, MAIN_WINDOW_CLASS_NAME_RE
-from evenbet_app_test_pywinauto.pages.LoginDialog import LoginDialog
+from .constants import APP_PATH, MAIN_WINDOW_CLASS_NAME_RE
+from .pages.LoginDialog import LoginDialog
 
 
 # pytest -s -v --tb=short --alluredir=allure

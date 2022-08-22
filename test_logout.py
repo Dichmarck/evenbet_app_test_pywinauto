@@ -1,6 +1,6 @@
 import allure
-from evenbet_app_test_pywinauto.utils import return_func_name, mouse_input
-from evenbet_app_test_pywinauto.pages.MainPage import MainPage
+from .utils import return_func_name, mouse_input
+from .pages.MainPage import MainPage
 
 
 def test_logout_from_left_menu(app, screenshot_report):

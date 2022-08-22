@@ -1,5 +1,5 @@
 import pywinauto
-from .common_utils import find_element_or_none
+from .locators_utils import find_element_or_none
 
 
 def my_games_lobby_tabs(app, timeout=0):

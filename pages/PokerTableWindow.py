@@ -1,6 +1,6 @@
-from evenbet_app_test_pywinauto.utils import timer
-from evenbet_app_test_pywinauto.pages.MainPage import MainPage
-from evenbet_app_test_pywinauto.locators import PokerTableWindowLocators
+from ..utils import timer
+from ..pages.MainPage import MainPage
+from ..locators import PokerTableWindowLocators
 
 
 class PokerTableWindow(MainPage):

@@ -1,14 +1,15 @@
 import time
 import allure
 import pytest
-from evenbet_app_test_pywinauto.locators import WindowsLocators
-from evenbet_app_test_pywinauto.utils import return_func_name, mouse_input, find_elem_by_text
-from evenbet_app_test_pywinauto.pages.ChatDialog import ChatDialog
-from evenbet_app_test_pywinauto.pages.TournamentLobbyWindow import TournamentLobbyPage
-from evenbet_app_test_pywinauto.pages.MainPage import MainPage
-from evenbet_app_test_pywinauto.pages.MyGamesPage import MyGamesPage
-from evenbet_app_test_pywinauto.pages.PokerPage import PokerPage
-from evenbet_app_test_pywinauto.pages.PokerTableWindow import PokerTableWindow
+from .locators import WindowsLocators
+from .utils import return_func_name, mouse_input, find_elem_by_text, close_dialog_by_esc, \
+    close_window_by_alt_f4, ensure_element_disappears
+from .pages.ChatDialog import ChatDialog
+from .pages.TournamentLobbyWindow import TournamentLobbyPage
+from .pages.MainPage import MainPage
+from .pages.MyGamesPage import MyGamesPage
+from .pages.PokerPage import PokerPage
+from .pages.PokerTableWindow import PokerTableWindow
 
 
 # pytest -s -v --tb=short --alluredir=reports/allure
@@ -30,8 +31,8 @@ def test_languages_list_appears_after_click_languages_button(app, screenshot_rep
         mouse_input(languages_list[0])
         assert len(languages_list) >= 12, f"Not all languages found (should be 12, but {len(languages_list)} found)."
     with allure.step("Close languages list."):
-        page.close_dialog_by_esc(languages_list[0])
-        languages_list_closed = page.ensure_element_disappears(languages_list[0], timeout=3)
+        close_dialog_by_esc(languages_list[0])
+        languages_list_closed = ensure_element_disappears(languages_list[0], timeout=3)
         assert languages_list_closed, "Language list didn't close."
     screenshot_report['status'] = 'passed'
 
@@ -78,8 +79,8 @@ class TestTournamentLobbyAndRegistration:
             assert register_button, "Register button not found on tournament registration form."
             mouse_input(register_button)
         with allure.step("Close tournament registration form."):
-            page.close_dialog_by_esc(register_button)
-            tour_reg_form_closed = page.ensure_element_disappears(register_button, timeout=3)
+            close_dialog_by_esc(register_button)
+            tour_reg_form_closed = ensure_element_disappears(register_button, timeout=3)
             assert tour_reg_form_closed, "Tournament registration form didn't close."
         screenshot_report['status'] = 'passed'
 
@@ -162,8 +163,8 @@ class TestTournamentLobbyAndRegistration:
             assert cashier_button, "Cashier button not found in Tournament lobby window."
             mouse_input(cashier_button)
         with allure.step("Close Tournament lobby window."):
-            tour_lobby_page.close_window_by_alt_f4(tour_lobby_window)
-            tour_lobby_window_closed = tour_lobby_page.ensure_element_disappears(tour_lobby_window, timeout=3)
+            close_window_by_alt_f4(tour_lobby_window)
+            tour_lobby_window_closed = ensure_element_disappears(tour_lobby_window, timeout=3)
             assert tour_lobby_window_closed, "Tournament lobby window didn't close."
         screenshot_report['status'] = 'passed'
 
@@ -214,8 +215,8 @@ class TestLeftMenuBar:
                                      "after click 'Account information' (2) tab."
                 mouse_input(acc_inf_form)
             with allure.step("Close 'Account information' form."):
-                page.close_dialog_by_esc(acc_inf_form)
-                acc_inf_form_closed = page.ensure_element_disappears(acc_inf_form, timeout=3)
+                close_dialog_by_esc(acc_inf_form)
+                acc_inf_form_closed = ensure_element_disappears(acc_inf_form, timeout=3)
                 assert acc_inf_form_closed, "'Account information' form didn't close."
             screenshot_report['status'] = 'passed'
 
@@ -233,9 +234,9 @@ class TestLeftMenuBar:
                                                      "after click 'Change password' (3) tab."
                 mouse_input(account_change_password_form)
             with allure.step("Close 'Change password' form."):
-                page.close_dialog_by_esc(account_change_password_form)
-                account_change_password_form_closed = page.ensure_element_disappears(account_change_password_form,
-                                                                                     timeout=3)
+                close_dialog_by_esc(account_change_password_form)
+                account_change_password_form_closed = ensure_element_disappears(account_change_password_form,
+                                                                                timeout=3)
                 assert account_change_password_form_closed, "'Change password' form didn't close."
             screenshot_report['status'] = 'passed'
 
@@ -253,9 +254,9 @@ class TestLeftMenuBar:
                                                     "after click 'Change address' (4) tab."
                 mouse_input(account_change_address_form)
             with allure.step("Close 'Change address' form."):
-                page.close_dialog_by_esc(account_change_address_form)
-                account_change_address_form_closed = page.ensure_element_disappears(account_change_address_form,
-                                                                                    timeout=3)
+                close_dialog_by_esc(account_change_address_form)
+                account_change_address_form_closed = ensure_element_disappears(account_change_address_form,
+                                                                               timeout=3)
                 assert account_change_address_form_closed, "'Change address' form didn't close."
             screenshot_report['status'] = 'passed'
 
@@ -273,8 +274,8 @@ class TestLeftMenuBar:
                                                   "after click 'Verification' (5) tab."
                 mouse_input(account_verification_form)
             with allure.step("Close 'Verification' form."):
-                page.close_dialog_by_esc(account_verification_form)
-                form_closed = page.ensure_element_disappears(account_verification_form, timeout=3)
+                close_dialog_by_esc(account_verification_form)
+                form_closed = ensure_element_disappears(account_verification_form, timeout=3)
                 assert form_closed, "'Verification' form didn't close."
             screenshot_report['status'] = 'passed'
 
@@ -292,8 +293,8 @@ class TestLeftMenuBar:
                                                   "after click '2FA settings' (6) tab."
                 mouse_input(account_2fa_settings_form)
             with allure.step("Close '2FA settings' form."):
-                page.close_dialog_by_esc(account_2fa_settings_form)
-                form_closed = page.ensure_element_disappears(account_2fa_settings_form, timeout=3)
+                close_dialog_by_esc(account_2fa_settings_form)
+                form_closed = ensure_element_disappears(account_2fa_settings_form, timeout=3)
                 assert form_closed, "'2FA settings' form didn't close."
             screenshot_report['status'] = 'passed'
 
@@ -311,8 +312,8 @@ class TestLeftMenuBar:
                                                    "after click 'Change avatar' (7) tab."
                 mouse_input(account_change_avatar_form)
             with allure.step("Close 'Change avatar' form."):
-                page.close_dialog_by_esc(account_change_avatar_form)
-                form_closed = page.ensure_element_disappears(account_change_avatar_form, timeout=3)
+                close_dialog_by_esc(account_change_avatar_form)
+                form_closed = ensure_element_disappears(account_change_avatar_form, timeout=3)
                 assert form_closed, "'Change avatar' form didn't close."
             screenshot_report['status'] = 'passed'
 
@@ -330,8 +331,8 @@ class TestLeftMenuBar:
                                                     "after click 'Delete account' (8) tab."
                 mouse_input(account_delete_account_form)
             with allure.step("Close 'Delete account' form."):
-                page.close_dialog_by_esc(account_delete_account_form)
-                form_closed = page.ensure_element_disappears(account_delete_account_form, timeout=3)
+                close_dialog_by_esc(account_delete_account_form)
+                form_closed = ensure_element_disappears(account_delete_account_form, timeout=3)
                 assert form_closed, "'Delete account' form didn't close."
             screenshot_report['status'] = 'passed'
 
@@ -352,8 +353,8 @@ class TestLeftMenuBar:
             assert create_table_button, "'Create table' form didn't appear after click 'Create table' (-5) tab."
             mouse_input(create_table_button)
         with allure.step("Close 'Create Table' form."):
-            page.close_dialog_by_esc(create_table_button)
-            create_table_closed = page.ensure_element_disappears(create_table_button, timeout=3)
+            close_dialog_by_esc(create_table_button)
+            create_table_closed = ensure_element_disappears(create_table_button, timeout=3)
             assert create_table_closed, "'Create table' didn't close."
         screenshot_report['status'] = 'passed'
 
@@ -373,8 +374,8 @@ class TestLeftMenuBar:
             assert my_tables_dialog, "'My Tables' dialog didn't appear after click 'My Tables' (-4) tab."
             mouse_input(my_tables_dialog)
         with allure.step("Close 'My tables' dialog."):
-            page.close_dialog_by_esc(my_tables_dialog)
-            my_tables_dialog_closed = page.ensure_element_disappears(my_tables_dialog, timeout=3)
+            close_dialog_by_esc(my_tables_dialog)
+            my_tables_dialog_closed = ensure_element_disappears(my_tables_dialog, timeout=3)
             assert my_tables_dialog_closed, "'My Tables' form didn't close after click 'OK' button."
         screenshot_report['status'] = 'passed'
 
@@ -396,8 +397,8 @@ class TestLeftMenuBar:
                                              "click 'Create tournament' (-3) tab."
             mouse_input(create_tournament_button)
         with allure.step("Close 'Create tournament' form."):
-            page.close_dialog_by_esc(create_tournament_button)
-            create_tournament_closed = page.ensure_element_disappears(create_tournament_button, timeout=3)
+            close_dialog_by_esc(create_tournament_button)
+            create_tournament_closed = ensure_element_disappears(create_tournament_button, timeout=3)
             assert create_tournament_closed, "'Create tournament' didn't close."
         screenshot_report['status'] = 'passed'
 
@@ -418,7 +419,7 @@ class TestLeftMenuBar:
             assert ok_button, "'About' form didn't appear after click 'About' (-2) tab."
         with allure.step("Click 'OK' button."):
             ok_button.click_input()
-            ok_button_closed = page.ensure_element_disappears(ok_button, timeout=3)
+            ok_button_closed = ensure_element_disappears(ok_button, timeout=3)
             assert ok_button_closed, "'About' form didn't close after click 'OK' button."
         screenshot_report['status'] = 'passed'
 
@@ -440,8 +441,8 @@ class TestMainPageButtons:
             assert cashier_window, "Cashier window didn't appear after clicking Cashier button."
             mouse_input(cashier_window)
         with allure.step("Close Cashier window."):
-            MainPage.close_window_by_alt_f4(cashier_window)
-            window_closed = MainPage.ensure_element_disappears(cashier_window, timeout=3)
+            close_window_by_alt_f4(cashier_window)
+            window_closed = ensure_element_disappears(cashier_window, timeout=3)
             assert window_closed, "Cashier window didn't close."
         screenshot_report['status'] = 'Passed'
 
@@ -476,12 +477,12 @@ class TestMainPageButtons:
             buy_in_form = poker_page.wait_for_buy_in_form(timeout=3)
             if buy_in_form:
                 mouse_input(buy_in_form)
-                PokerPage.close_dialog_by_esc(buy_in_form)
-            buy_in_form_closed = PokerPage.ensure_element_disappears(buy_in_form, timeout=2)
+                close_dialog_by_esc(buy_in_form)
+            buy_in_form_closed = ensure_element_disappears(buy_in_form, timeout=2)
             assert buy_in_form_closed, "Buy In form didn't close."
         with allure.step("Close Poker Table window."):
-            PokerTableWindow.close_window_by_alt_f4(poker_table_window)
-            poker_table_window_closed = PokerTableWindow.ensure_element_disappears(poker_table_window, timeout=3)
+            close_window_by_alt_f4(poker_table_window)
+            poker_table_window_closed = ensure_element_disappears(poker_table_window, timeout=3)
             assert poker_table_window_closed, "Poker Table window didn't close."
         screenshot_report['status'] = 'Passed'
 
@@ -514,8 +515,8 @@ class TestRightTopSettings:
                                          "after click 'Sounds' tab in right top settings menu."
             mouse_input(sounds_settings_form)
         with allure.step("Close 'Sounds' settings form."):
-            page.close_dialog_by_esc(sounds_settings_form)
-            sounds_settings_form_closed = page.ensure_element_disappears(sounds_settings_form, timeout=3)
+            close_dialog_by_esc(sounds_settings_form)
+            sounds_settings_form_closed = ensure_element_disappears(sounds_settings_form, timeout=3)
             assert sounds_settings_form_closed, "'Sounds settings' form didn't close."
         screenshot_report['status'] = 'passed'
 
@@ -534,8 +535,8 @@ class TestRightTopSettings:
                                                "after click 'Rates Slider' tab in right top settings menu."
             mouse_input(rates_slider_settings_form)
         with allure.step("Close 'Rates Slider settings' form."):
-            page.close_dialog_by_esc(rates_slider_settings_form)
-            rates_slider_settings_form_closed = page.ensure_element_disappears(rates_slider_settings_form, timeout=3)
+            close_dialog_by_esc(rates_slider_settings_form)
+            rates_slider_settings_form_closed = ensure_element_disappears(rates_slider_settings_form, timeout=3)
             assert rates_slider_settings_form_closed, "'Rates slider settings' form didn't close."
         screenshot_report['status'] = 'passed'
 
@@ -554,8 +555,8 @@ class TestRightTopSettings:
                                               "after click 'System & Chat' tab in right top settings menu."
             mouse_input(system_chat_settings_form)
         with allure.step("Close 'System & Chat settings' form."):
-            page.close_dialog_by_esc(system_chat_settings_form)
-            system_chat_settings_form_closed = page.ensure_element_disappears(system_chat_settings_form, timeout=3)
+            close_dialog_by_esc(system_chat_settings_form)
+            system_chat_settings_form_closed = ensure_element_disappears(system_chat_settings_form, timeout=3)
             assert system_chat_settings_form_closed, "'System & Chat settings' form didn't close."
         screenshot_report['status'] = 'passed'
 
@@ -574,8 +575,8 @@ class TestRightTopSettings:
                                               "after click 'BuyIn & rebuy' tab in right top settings menu."
             mouse_input(buyin_rebuy_settings_form)
         with allure.step("Close 'BuyIn & Rebuy settings' form."):
-            page.close_dialog_by_esc(buyin_rebuy_settings_form)
-            buyin_rebuy_settings_form_closed = page.ensure_element_disappears(buyin_rebuy_settings_form, timeout=3)
+            close_dialog_by_esc(buyin_rebuy_settings_form)
+            buyin_rebuy_settings_form_closed = ensure_element_disappears(buyin_rebuy_settings_form, timeout=3)
             assert buyin_rebuy_settings_form_closed, "'BuyIn & rebuy settings' form didn't close."
         screenshot_report['status'] = 'passed'
 
@@ -594,8 +595,8 @@ class TestRightTopSettings:
                                         "after click 'Table settings' tab in right top settings menu."
             mouse_input(table_settings_form)
         with allure.step("Close 'Table settings' form."):
-            page.close_dialog_by_esc(table_settings_form)
-            table_settings_form_closed = page.ensure_element_disappears(table_settings_form, timeout=3)
+            close_dialog_by_esc(table_settings_form)
+            table_settings_form_closed = ensure_element_disappears(table_settings_form, timeout=3)
             assert table_settings_form_closed, "'Table settings' form didn't close."
         screenshot_report['status'] = 'passed'
 
@@ -629,8 +630,8 @@ class TestRightBottomButtons:
             chat_messages_str_list = page.find_chat_messages_str_list()
             assert new_message in chat_messages_str_list, "New message wasn't displayed in chat."
         with allure.step("Close chat dialog."):
-            page.close_dialog_by_esc(chat_dialog)
-            chat_closed = page.ensure_element_disappears(chat_dialog, timeout=3)
+            close_dialog_by_esc(chat_dialog)
+            chat_closed = ensure_element_disappears(chat_dialog, timeout=3)
             assert chat_closed, "Chat didn't close."
         screenshot_report['status'] = 'Passed'
 
@@ -650,8 +651,8 @@ class TestRightBottomButtons:
             assert my_tables_dialog, "'My Tables' dialog didn't appear after click right bottom 'My Tables' button."
             mouse_input(my_tables_dialog)
         with allure.step("Close 'My Tables' dialog."):
-            page.close_dialog_by_esc(my_tables_dialog)
-            my_tables_dialog_closed = page.ensure_element_disappears(my_tables_dialog, timeout=3)
+            close_dialog_by_esc(my_tables_dialog)
+            my_tables_dialog_closed = ensure_element_disappears(my_tables_dialog, timeout=3)
             assert my_tables_dialog_closed, "'My Tables' dialog didn't close."
         screenshot_report['status'] = 'Passed'
 
@@ -673,8 +674,8 @@ class TestRightBottomButtons:
             mouse_input(my_tournaments_window)
             my_tournaments_window.click_input()
         with allure.step("Close 'My Tournaments' window."):
-            MainPage.close_window_by_alt_f4(my_tournaments_window)
-            my_tournaments_window_closed = page.ensure_element_disappears(my_tournaments_window, timeout=2)
+            close_window_by_alt_f4(my_tournaments_window)
+            my_tournaments_window_closed = ensure_element_disappears(my_tournaments_window, timeout=2)
             assert my_tournaments_window_closed, "'My Tournaments' window didn't close."
         screenshot_report['status'] = 'Passed'
 

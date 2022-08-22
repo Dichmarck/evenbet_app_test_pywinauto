@@ -1,32 +1,10 @@
-import time
-import _ctypes
-import pywinauto
-from evenbet_app_test_pywinauto.locators import MainPageLocators, WindowsLocators
-from evenbet_app_test_pywinauto.utils import timer
-
+from ..locators import MainPageLocators, WindowsLocators
+from ..utils import timer
 
 
 class MainPage:
     def __init__(self, app):
         self.app = app
-
-    @staticmethod
-    def ensure_element_disappears(element, timeout=0):
-        time_start = time.time()
-        while time.time() - time_start <= timeout:
-            try:
-                element.rectangle()
-            except (_ctypes.COMError, pywinauto.findwindows.ElementNotFoundError):
-                return True
-        return False
-
-    @staticmethod
-    def close_window_by_alt_f4(window):
-        window.type_keys("%{F4}")
-
-    @staticmethod
-    def close_dialog_by_esc(dialog):
-        dialog.type_keys("{VK_ESCAPE}")
 
     @timer("Right top close app cross")
     def find_close_app_right_top_cross(self):
@@ -191,12 +169,12 @@ class MainPage:
     @timer("Create table button on create table form")
     def wait_for_create_table_button_on_create_table_form(self, timeout=0):
         create_table_button = MainPageLocators.create_table_button_on_create_table_form(self.app,
-                                                                                                 timeout=timeout)
+                                                                                        timeout=timeout)
         return create_table_button
 
     @timer("Create tournament button on create tournament form")
     def wait_for_create_tournament_button_on_create_tournament_form(self, timeout=0):
-        create_tournament_button = MainPageLocators.\
+        create_tournament_button = MainPageLocators. \
             create_tournament_button_on_create_tournament_form(self.app, timeout=timeout)
         return create_tournament_button
 
@@ -214,4 +192,3 @@ class MainPage:
     def wait_for_languages_list(self, timeout=0):
         languages_list = MainPageLocators.languages_list(self.app, timeout=timeout)
         return languages_list
-    

@@ -1,7 +1,7 @@
-from evenbet_app_test_pywinauto.pages.MainPage import MainPage
-from evenbet_app_test_pywinauto.locators import LoginDialogLocators, MainPageLocators
-from evenbet_app_test_pywinauto.constants import PASSWORD, USERNAME
-from evenbet_app_test_pywinauto.utils import timer
+from ..pages.MainPage import MainPage
+from ..locators import LoginDialogLocators, MainPageLocators
+from ..constants import PASSWORD, USERNAME
+from ..utils import timer
 
 
 class LoginDialog(MainPage):

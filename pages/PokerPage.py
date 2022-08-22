@@ -1,6 +1,6 @@
-from evenbet_app_test_pywinauto.utils import timer
-from evenbet_app_test_pywinauto.pages.MainPage import MainPage
-from evenbet_app_test_pywinauto.locators import PokerPageLocators
+from ..utils import timer
+from ..pages.MainPage import MainPage
+from ..locators import PokerPageLocators
 
 
 class PokerPage(MainPage):

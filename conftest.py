@@ -5,10 +5,9 @@ import PIL.Image
 import allure
 import pyautogui
 import pytest
-
-from evenbet_app_test_pywinauto.constants import *
-from evenbet_app_test_pywinauto.pages.LoginPage import LoginPage
-from evenbet_app_test_pywinauto.pages.locators import *
+import pywinauto
+from evenbet_app_test_pywinauto.constants import APP_PATH, MAIN_WINDOW_CLASS_NAME_RE
+from evenbet_app_test_pywinauto.pages.LoginDialog import LoginDialog
 
 
 # pytest -s -v --tb=short --alluredir=allure
@@ -21,7 +20,7 @@ def app():
         application = pywinauto.Application(backend='uia').start(APP_PATH). \
             connect(class_name_re=MAIN_WINDOW_CLASS_NAME_RE, timeout=30)
         app_win = application.window(class_name_re=MAIN_WINDOW_CLASS_NAME_RE)
-        page = LoginPage(app_win)
+        page = LoginDialog(app_win)
 
     with allure.step("Find or open login window."):
         login_window = page.wait_for_login_window(timeout=3)

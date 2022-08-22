@@ -1,18 +1,18 @@
 from evenbet_app_test_pywinauto.utils import timer
-from evenbet_app_test_pywinauto.pages.BasePage import BasePage
-from evenbet_app_test_pywinauto.pages import locators
+from evenbet_app_test_pywinauto.pages.MainPage import MainPage
+from evenbet_app_test_pywinauto.locators import ChatDialogLocators
 
 
-class ChatDialogPage(BasePage):
+class ChatDialog(MainPage):
 
     @timer("Chat text field")
     def find_chat_text_field(self):
-        text_field = locators.ChatDialogPageLocators.chat_text_field(self.app)
+        text_field = ChatDialogLocators.chat_text_field(self.app)
         return text_field
 
     @timer("Chat message str list")
     def find_chat_messages_str_list(self):
-        chat_messages_str_list = locators.ChatDialogPageLocators.chat_messages_str_list(self.app)
+        chat_messages_str_list = ChatDialogLocators.chat_messages_str_list(self.app)
         return chat_messages_str_list
 
     @timer("Send message in chat")

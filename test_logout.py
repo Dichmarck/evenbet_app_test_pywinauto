@@ -1,13 +1,13 @@
 import allure
 from evenbet_app_test_pywinauto.utils import return_func_name, mouse_input
-from evenbet_app_test_pywinauto.pages.BasePage import BasePage
+from evenbet_app_test_pywinauto.pages.MainPage import MainPage
 
 
 def test_logout_from_left_menu(app, screenshot_report):
     """Im this test we try to open left menu, choose 'Logout' tab, click 'Yes' button on logout dialog
         and find 'Login' button on main page."""
-    with allure.step("Initializing MyGamesPage."):
-        page = BasePage(app=app)
+    with allure.step("Initializing MainPage."):
+        page = MainPage(app=app)
         screenshot_report['window'] = app
         screenshot_report['file_name'] = return_func_name()
     with allure.step("Find left menu button."):

@@ -3,11 +3,16 @@ import pywinauto
 import time
 
 
-def find_element_or_none(element, timeout=0):
+def find_element_or_none(element_specification, timeout=0):
+    """This function tries to find wrapper of given element specification.
+        :Args:
+            - element_specification: instance of class WindowSpecification or wrapper_object() of some element.
+            - timeout: the time during which the search is going on.
+    """
     time_start = time.time()
     while time.time() - time_start <= timeout:
         try:
-            return element.wrapper_object()
+            return element_specification.wrapper_object()
         except pywinauto.findwindows.ElementNotFoundError:
             pass
     return None
@@ -56,7 +61,7 @@ class WindowsLocators:
             return None
 
 
-class BasePageLocators:
+class MainPageLocators:
 
     @staticmethod
     def close_app_right_top_button(app, timeout=0):
@@ -245,7 +250,7 @@ class BasePageLocators:
 
 
 
-class LoginPageLocators(BasePageLocators):
+class LoginPageLocators(MainPageLocators):
     @staticmethod
     def username_field(app, timeout=0):
         return find_element_or_none(app.Edit1, timeout=timeout)
@@ -265,7 +270,7 @@ class LoginPageLocators(BasePageLocators):
                                     child_window(class_name_re="PButtonQuaternary_QMLTYPE_*"), timeout=timeout)
 
 
-class PokerPageLocators(BasePageLocators):
+class PokerPageLocators(MainPageLocators):
 
     @staticmethod
     def poker_lobby_tabs(app, timeout=0):
@@ -327,7 +332,7 @@ class PokerPageLocators(BasePageLocators):
         return None
 
 
-class MyGamesPageLocators(BasePageLocators):
+class MyGamesPageLocators(MainPageLocators):
     @staticmethod
     def my_games_lobby_tabs(app, timeout=0):
         try:
@@ -369,7 +374,7 @@ class MyGamesPageLocators(BasePageLocators):
         return my_games_my_casino_form
 
 
-class ChatDialogPageLocators(BasePageLocators):
+class ChatDialogPageLocators(MainPageLocators):
 
     @staticmethod
     def chat_text_field(app, timeout=0):
@@ -387,7 +392,7 @@ class ChatDialogPageLocators(BasePageLocators):
         return chat_messages_str_list
 
 
-class PokerTablePageLocators(BasePageLocators):
+class PokerTablePageLocators(MainPageLocators):
 
     @staticmethod
     def buy_in_form(app, timeout=0):
@@ -395,7 +400,7 @@ class PokerTablePageLocators(BasePageLocators):
         return buy_in_form
 
 
-class TournamentsLobbyPageLocators(BasePageLocators):
+class TournamentsLobbyPageLocators(MainPageLocators):
 
     @staticmethod
     def tabs(app, timeout=0):

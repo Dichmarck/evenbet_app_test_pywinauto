@@ -1,14 +1,14 @@
 import time
 import allure
 import pytest
+from evenbet_app_test_pywinauto.locators import WindowsLocators
 from evenbet_app_test_pywinauto.utils import return_func_name, mouse_input, find_elem_by_text
-from evenbet_app_test_pywinauto.pages.ChatDialogPage import ChatDialogPage
-from evenbet_app_test_pywinauto.pages.TournamentLobbyPage import TournamentLobbyPage
-from evenbet_app_test_pywinauto.pages.locators import WindowsLocators
-from evenbet_app_test_pywinauto.pages.BasePage import BasePage
+from evenbet_app_test_pywinauto.pages.ChatDialog import ChatDialog
+from evenbet_app_test_pywinauto.pages.TournamentLobbyWindow import TournamentLobbyPage
+from evenbet_app_test_pywinauto.pages.MainPage import MainPage
 from evenbet_app_test_pywinauto.pages.MyGamesPage import MyGamesPage
 from evenbet_app_test_pywinauto.pages.PokerPage import PokerPage
-from evenbet_app_test_pywinauto.pages.PokerTablePage import PokerTablePage
+from evenbet_app_test_pywinauto.pages.PokerTableWindow import PokerTableWindow
 
 
 # pytest -s -v --tb=short --alluredir=reports/allure
@@ -202,8 +202,8 @@ class TestLeftMenuBar:
 
         def test_account_information(self, app, screenshot_report):
             """Test 'Account' -> 'Account information' tab."""
-            with allure.step("Initializing BasePage."):
-                page = BasePage(app=app)
+            with allure.step("Initializing MainPage."):
+                page = MainPage(app=app)
                 screenshot_report['window'] = app
                 screenshot_report['file_name'] = return_func_name()
             tabs = self.click_left_menu_button_open_account_tab_and_close_other_tabs_and_return_tabs(page=page)
@@ -221,8 +221,8 @@ class TestLeftMenuBar:
 
         def test_account_change_password_form(self, app, screenshot_report):
             """Test 'Account' -> 'Change password' tab."""
-            with allure.step("Initializing BasePage."):
-                page = BasePage(app=app)
+            with allure.step("Initializing MainPage."):
+                page = MainPage(app=app)
                 screenshot_report['window'] = app
                 screenshot_report['file_name'] = return_func_name()
             tabs = self.click_left_menu_button_open_account_tab_and_close_other_tabs_and_return_tabs(page=page)
@@ -241,8 +241,8 @@ class TestLeftMenuBar:
 
         def test_account_change_address_form(self, app, screenshot_report):
             """Test 'Account' -> 'Change address' tab."""
-            with allure.step("Initializing BasePage."):
-                page = BasePage(app=app)
+            with allure.step("Initializing MainPage."):
+                page = MainPage(app=app)
                 screenshot_report['window'] = app
                 screenshot_report['file_name'] = return_func_name()
             tabs = self.click_left_menu_button_open_account_tab_and_close_other_tabs_and_return_tabs(page=page)
@@ -261,8 +261,8 @@ class TestLeftMenuBar:
 
         def test_account_verification_form(self, app, screenshot_report):
             """Test 'Account' -> 'Verification' tab."""
-            with allure.step("Initializing BasePage."):
-                page = BasePage(app=app)
+            with allure.step("Initializing MainPage."):
+                page = MainPage(app=app)
                 screenshot_report['window'] = app
                 screenshot_report['file_name'] = return_func_name()
             tabs = self.click_left_menu_button_open_account_tab_and_close_other_tabs_and_return_tabs(page=page)
@@ -280,8 +280,8 @@ class TestLeftMenuBar:
 
         def test_account_2fa_settings_form(self, app, screenshot_report):
             """Test 'Account' -> '2FA settings' tab."""
-            with allure.step("Initializing BasePage."):
-                page = BasePage(app=app)
+            with allure.step("Initializing MainPage."):
+                page = MainPage(app=app)
                 screenshot_report['window'] = app
                 screenshot_report['file_name'] = return_func_name()
             tabs = self.click_left_menu_button_open_account_tab_and_close_other_tabs_and_return_tabs(page=page)
@@ -299,8 +299,8 @@ class TestLeftMenuBar:
 
         def test_account_change_avatar_form(self, app, screenshot_report):
             """Test 'Account' -> 'Change avatar' tab."""
-            with allure.step("Initializing BasePage."):
-                page = BasePage(app=app)
+            with allure.step("Initializing MainPage."):
+                page = MainPage(app=app)
                 screenshot_report['window'] = app
                 screenshot_report['file_name'] = return_func_name()
             tabs = self.click_left_menu_button_open_account_tab_and_close_other_tabs_and_return_tabs(page=page)
@@ -318,8 +318,8 @@ class TestLeftMenuBar:
 
         def test_account_delete_account_form(self, app, screenshot_report):
             """Test 'Account' -> 'Delete account' tab."""
-            with allure.step("Initializing BasePage."):
-                page = BasePage(app=app)
+            with allure.step("Initializing MainPage."):
+                page = MainPage(app=app)
                 screenshot_report['window'] = app
                 screenshot_report['file_name'] = return_func_name()
             tabs = self.click_left_menu_button_open_account_tab_and_close_other_tabs_and_return_tabs(page=page)
@@ -338,8 +338,8 @@ class TestLeftMenuBar:
     def test_create_table(self, app, screenshot_report):
         """In this test we try to open left menu, choose 'Create table' (-5) tab and wait for 'Create table' form 
             with 'Create table' button."""
-        with allure.step("Initializing BasePage."):
-            page = BasePage(app=app)
+        with allure.step("Initializing MainPage."):
+            page = MainPage(app=app)
             screenshot_report['window'] = app
             screenshot_report['file_name'] = return_func_name()
         with allure.step("Open left menu and find tabs."):
@@ -359,8 +359,8 @@ class TestLeftMenuBar:
 
     def test_my_tables(self, app, screenshot_report):
         """In this test we try to open left menu, choose 'My Tables' (-4) tab, wait for 'My Tables' dialog."""
-        with allure.step("Initializing BasePage."):
-            page = BasePage(app=app)
+        with allure.step("Initializing MainPage."):
+            page = MainPage(app=app)
             screenshot_report['window'] = app
             screenshot_report['file_name'] = return_func_name()
         with allure.step("Open left menu and find tabs."):
@@ -381,8 +381,8 @@ class TestLeftMenuBar:
     def test_create_tournament(self, app, screenshot_report):
         """In this test we try to open left menu, choose 'Create tournament' (-3) tab
             and wait for 'Create tournament' form with 'Create tournament' button."""
-        with allure.step("Initializing BasePage."):
-            page = BasePage(app=app)
+        with allure.step("Initializing MainPage."):
+            page = MainPage(app=app)
             screenshot_report['window'] = app
             screenshot_report['file_name'] = return_func_name()
         with allure.step("Open left menu and find tabs."):
@@ -404,8 +404,8 @@ class TestLeftMenuBar:
     def test_about(self, app, screenshot_report):
         """In this test we try to open left menu, choose 'About' (-2) tab, wait for 'About' form with 'OK' button 
                 and click it"""
-        with allure.step("Initializing BasePage."):
-            page = BasePage(app=app)
+        with allure.step("Initializing MainPage."):
+            page = MainPage(app=app)
             screenshot_report['window'] = app
             screenshot_report['file_name'] = return_func_name()
         with allure.step("Open left menu and find tabs."):
@@ -423,12 +423,12 @@ class TestLeftMenuBar:
         screenshot_report['status'] = 'passed'
 
 
-class TestBasePageButtons:
+class TestMainPageButtons:
 
     def test_cashier_window_appears_after_click_cashier_button(self, app, screenshot_report):
         """In this test we try to click 'Cashier' button, ensure that 'Cashier' window opens and close it."""
-        with allure.step("Initializing BasePage."):
-            page = BasePage(app=app)
+        with allure.step("Initializing MainPage."):
+            page = MainPage(app=app)
             screenshot_report['window'] = app
             screenshot_report['file_name'] = return_func_name()
         with allure.step("Find Cashier button."):
@@ -440,8 +440,8 @@ class TestBasePageButtons:
             assert cashier_window, "Cashier window didn't appear after clicking Cashier button."
             mouse_input(cashier_window)
         with allure.step("Close Cashier window."):
-            BasePage.close_window_by_alt_f4(cashier_window)
-            window_closed = BasePage.ensure_element_disappears(cashier_window, timeout=3)
+            MainPage.close_window_by_alt_f4(cashier_window)
+            window_closed = MainPage.ensure_element_disappears(cashier_window, timeout=3)
             assert window_closed, "Cashier window didn't close."
         screenshot_report['status'] = 'Passed'
 
@@ -471,7 +471,7 @@ class TestBasePageButtons:
             poker_table_window = WindowsLocators.poker_table_window(timeout=10)
             assert poker_table_window, "Poker window didn't appear after click Play button."
             mouse_input(poker_table_window)
-            poker_page = PokerTablePage(app=poker_table_window)
+            poker_page = PokerTableWindow(app=poker_table_window)
         with allure.step("Find and close BuyIn form."):
             buy_in_form = poker_page.wait_for_buy_in_form(timeout=3)
             if buy_in_form:
@@ -480,8 +480,8 @@ class TestBasePageButtons:
             buy_in_form_closed = PokerPage.ensure_element_disappears(buy_in_form, timeout=2)
             assert buy_in_form_closed, "Buy In form didn't close."
         with allure.step("Close Poker Table window."):
-            PokerTablePage.close_window_by_alt_f4(poker_table_window)
-            poker_table_window_closed = PokerTablePage.ensure_element_disappears(poker_table_window, timeout=3)
+            PokerTableWindow.close_window_by_alt_f4(poker_table_window)
+            poker_table_window_closed = PokerTableWindow.ensure_element_disappears(poker_table_window, timeout=3)
             assert poker_table_window_closed, "Poker Table window didn't close."
         screenshot_report['status'] = 'Passed'
 
@@ -490,7 +490,7 @@ class TestRightTopSettings:
 
     def click_right_top_settings_button_and_find_tabs(self, app):
         with allure.step("Find right top settings button."):
-            page = BasePage(app=app)
+            page = MainPage(app=app)
             right_top_settings_button = page.find_right_top_settings_button()
             assert right_top_settings_button, "Right top settings button not found on main page."
         with allure.step("Click settings button and wait for tabs in settings menu."):
@@ -502,8 +502,8 @@ class TestRightTopSettings:
     def test_settings_sounds(self, app, screenshot_report):
         """In this test we try to press right top settings button, choose 'Sounds' settings tab,
                 check that 'Sounds settings' window appears and then close it."""
-        with allure.step("Initializing BasePage."):
-            page = BasePage(app=app)
+        with allure.step("Initializing MainPage."):
+            page = MainPage(app=app)
             screenshot_report['window'] = app
             screenshot_report['file_name'] = return_func_name()
         settings_tabs = self.click_right_top_settings_button_and_find_tabs(app)
@@ -522,8 +522,8 @@ class TestRightTopSettings:
     def test_settings_rates_slider(self, app, screenshot_report):
         """In this test we try to press right top settings button, choose 'Rates Slider' settings tab,
                 check that 'Rates slider settings' window appears and then close it."""
-        with allure.step("Initializing BasePage."):
-            page = BasePage(app=app)
+        with allure.step("Initializing MainPage."):
+            page = MainPage(app=app)
             screenshot_report['window'] = app
             screenshot_report['file_name'] = return_func_name()
         settings_tabs = self.click_right_top_settings_button_and_find_tabs(app)
@@ -542,8 +542,8 @@ class TestRightTopSettings:
     def test_settings_system_chat(self, app, screenshot_report):
         """In this test we try to press right top settings button, choose 'System & chat' settings tab,
                 check that 'System & Chat settings' window appears and then close it."""
-        with allure.step("Initializing BasePage."):
-            page = BasePage(app=app)
+        with allure.step("Initializing MainPage."):
+            page = MainPage(app=app)
             screenshot_report['window'] = app
             screenshot_report['file_name'] = return_func_name()
         settings_tabs = self.click_right_top_settings_button_and_find_tabs(app)
@@ -562,8 +562,8 @@ class TestRightTopSettings:
     def test_settings_buyin_rebuy(self, app, screenshot_report):
         """In this test we try to press right top settings button, choose 'BuyIn & rebuy' settings tab,
                 check that 'BuyIn & Rebuy settings' window appears and then close it."""
-        with allure.step("Initializing BasePage."):
-            page = BasePage(app=app)
+        with allure.step("Initializing MainPage."):
+            page = MainPage(app=app)
             screenshot_report['window'] = app
             screenshot_report['file_name'] = return_func_name()
         settings_tabs = self.click_right_top_settings_button_and_find_tabs(app)
@@ -582,8 +582,8 @@ class TestRightTopSettings:
     def test_settings_table(self, app, screenshot_report):
         """In this test we try to press right top settings button, choose 'Table settings' tab,
                         check that 'Table settings' window appears and then close it."""
-        with allure.step("Initializing BasePage."):
-            page = BasePage(app=app)
+        with allure.step("Initializing MainPage."):
+            page = MainPage(app=app)
             screenshot_report['window'] = app
             screenshot_report['file_name'] = return_func_name()
         settings_tabs = self.click_right_top_settings_button_and_find_tabs(app)
@@ -605,8 +605,8 @@ class TestRightBottomButtons:
     def test_chat_button(self, app, screenshot_report):
         """In this test we try to open Chat dialog, send new message and close it."""
 
-        with allure.step("Initializing BasePage."):
-            page = ChatDialogPage(app=app)
+        with allure.step("Initializing MainPage."):
+            page = ChatDialog(app=app)
             screenshot_report['window'] = app
             screenshot_report['file_name'] = return_func_name()
         with allure.step("Find right bottom buttons."):
@@ -637,8 +637,8 @@ class TestRightBottomButtons:
     def test_my_tables(self, app, screenshot_report):
         """In this test we try to open 'My Tables' dialog and close it."""
 
-        with allure.step("Initializing BasePage."):
-            page = BasePage(app=app)
+        with allure.step("Initializing MainPage."):
+            page = MainPage(app=app)
             screenshot_report['window'] = app
             screenshot_report['file_name'] = return_func_name()
         with allure.step("Find right bottom buttons."):
@@ -658,8 +658,8 @@ class TestRightBottomButtons:
     def test_my_tournaments(self, app, screenshot_report):
         """In this test we try to open 'My Tournaments' window and close it."""
 
-        with allure.step("Initializing BasePage."):
-            page = BasePage(app=app)
+        with allure.step("Initializing MainPage."):
+            page = MainPage(app=app)
             screenshot_report['window'] = app
             screenshot_report['file_name'] = return_func_name()
         with allure.step("Find right bottom buttons."):
@@ -673,7 +673,7 @@ class TestRightBottomButtons:
             mouse_input(my_tournaments_window)
             my_tournaments_window.click_input()
         with allure.step("Close 'My Tournaments' window."):
-            BasePage.close_window_by_alt_f4(my_tournaments_window)
+            MainPage.close_window_by_alt_f4(my_tournaments_window)
             my_tournaments_window_closed = page.ensure_element_disappears(my_tournaments_window, timeout=2)
             assert my_tournaments_window_closed, "'My Tournaments' window didn't close."
         screenshot_report['status'] = 'Passed'

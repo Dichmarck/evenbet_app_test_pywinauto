@@ -11,7 +11,11 @@ def return_func_name():
 
 
 def mouse_input(element, duration=0):
-    """Move mouse to center of element."""
+    """Move mouse to center of element.
+        :Args:
+            - element - instance of classes WindowSpecification or UIAWrapper.
+            - duration - the time it takes for the cursor to move.
+        """
     rect = element.rectangle()
     center_h = int((rect.right + rect.left) / 2)
     center_v = int((rect.bottom + rect.top) / 2)
@@ -19,7 +23,11 @@ def mouse_input(element, duration=0):
 
 
 def find_elem_by_text(elements, text):
-    """Select one element from list of elements by window_text()."""
+    """Select one element from list of elements by window_text().
+        :Args:
+            - element - list of instances of classes WindowSpecification or UIAWrapper.
+            - text - text, that will be compared with window_text() of element.
+    """
     for elem in elements:
         if elem.window_text().strip().lower() == text.strip().lower():
             return elem
@@ -27,7 +35,10 @@ def find_elem_by_text(elements, text):
 
 
 def timer(label=""):
-    """Decorator that prints function runtime with given label."""
+    """Decorator that prints function runtime with given label.
+        :Args:
+            - label - text, that will be printed in terminal before time.
+    """
     def timer_decorator(func):
         def timer_wrapper(*args, **kwargs):
             time_start = time.time()
@@ -39,12 +50,21 @@ def timer(label=""):
 
 
 def get_rect_center(rect):
+    """Returns the X,Y coordinates of center of given rectangle.
+        :Args:
+            - rect - instance of class Rectangle.
+    """
     h_center = int((rect.left + rect.right)/2)
     v_center = int((rect.top + rect.bottom) / 2)
     return (h_center, v_center)
 
 
 def ensure_element_disappears(element, timeout=0):
+    """Returns True if element disappears in given time else False.
+        :Args:
+            - element - instance of classes WindowSpecification or UIAWrapper.
+            - timeout - time range.
+    """
     time_start = time.time()
     while time.time() - time_start <= timeout:
         try:

@@ -15,7 +15,7 @@ def mouse_input(element, duration=0):
         :Args:
             - element - instance of classes WindowSpecification or UIAWrapper.
             - duration - the time it takes for the cursor to move.
-        """
+    """
     rect = element.rectangle()
     center_h = int((rect.right + rect.left) / 2)
     center_v = int((rect.bottom + rect.top) / 2)
